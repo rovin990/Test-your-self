@@ -1,0 +1,5 @@
+A <button type="button">, while seemingly redundant, is the HTML way of preventing a button from submitting its form.
+
+1. React router <Form /> if there is no method mention take GET as method so it call routes loader not action.
+    GET = loader
+    POST= Action

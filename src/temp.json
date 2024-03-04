@@ -1,0 +1,51 @@
+
+const tempArr= [
+    {
+        qId:1,
+        title:"Title 1",
+        description:"description 1",
+        maxMark:50,
+        noOfQuestion:20,
+        isPublished :false
+    },
+    {
+        qId:2,
+        title:"Title 1",
+        description:"description 1",
+        maxMark:50,
+        noOfQuestion:20,
+        isPublished :false
+    },
+    {
+        qId:3,
+        title:"Title 1",
+        description:"description 1",
+        maxMark:50,
+        noOfQuestion:20,
+        isPublished :false
+    },
+    {
+        qId:4,
+        title:"Title 1",
+        description:"description 1",
+        maxMark:50,
+        noOfQuestion:20,
+        isPublished :false
+    },
+    {
+        qId:5,
+        title:"Title 1",
+        description:"description 1",
+        maxMark:50,
+        noOfQuestion:20,
+        isPublished :false
+    },
+    {
+        qId:6,
+        title:"Title 1",
+        description:"description 1",
+        maxMark:50,
+        noOfQuestion:20,
+        isPublished :false
+    }
+]
