@@ -1,31 +1,39 @@
 import axios from "axios";
-const BASE_URL="http://localhost:8080/question"
+const BASE_URL="http://localhost:8080"
 
 class QuestionService{
-    async getQuestions(filter){
-        console.log(BASE_URL+"/"+filter)
-        
-        return await axios.get(BASE_URL+"/"+filter,{withCredentials:true,auth:{username:"kick990",password:"12345" } });
+    async getQuestions(filter){        
+        return await axios.get(BASE_URL+"/question/"+filter,{withCredentials:true });
     }
 
-    async createQuestion(question){
-        return await axios.post(BASE_URL,question,{withCredentials:true,auth:{username:"kick990",password:"12345" } })
+    async createQuestion(formData){
+        return await axios.post(BASE_URL+"/question",formData,{withCredentials:true })
+    }
+    async createQuestionWithOutImages(formData){
+        return await axios.put(BASE_URL+"/question",formData,{withCredentials:true })
     }
 
     async updateQuestion(question){
-        return await axios.put(BASE_URL,question,{withCredentials:true,auth:{username:"kick990",password:"12345" } });
+        return await axios.put(BASE_URL+"/question",question,{withCredentials:true});
     }
 
     async deleteQuestion(questionId){
-        return await axios.delete(BASE_URL+"/"+questionId,{withCredentials:true,auth:{username:"kick990",password:"12345" } })
+        return await axios.delete(BASE_URL+"/question/"+questionId,{withCredentials:true })
     }
 
     async getQuestionsByQuizId(quizId){
-        return await axios.get(BASE_URL+"/quiz/"+quizId,{withCredentials:true,auth:{username:"kick990",password:"12345" } })
+        return await axios.get(BASE_URL+"/question/quiz/"+quizId,{withCredentials:true })
     }
     async getQuestionsByQuizIdWithAnswer(quizId){
-        return await axios.get(BASE_URL+"/quiz/"+quizId,{withCredentials:true,auth:{username:"kick990",password:"12345" } })
+        return await axios.get(BASE_URL+"/question/quiz/"+quizId,{withCredentials:true})
     }
+    
 }
 
 export default QuestionService;
+
+
+
+// for (var key of formData.entries()) {
+//     console.log(key[0] + ', ' + key[1]);
+// }

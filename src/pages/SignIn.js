@@ -12,7 +12,6 @@ import CardContent from '@mui/material/CardContent';
 
 import UserService from '../services/UserService'
 import Navbar from '../components/Navbar';
-import axios from 'axios';
 
 const userserviceObj = new UserService();
 
@@ -58,9 +57,6 @@ function SignIn() {
                     console.log("/user/dashboard")
                     navigate("/user")
                 }
-                // console.log("before",sessionStorage)
-                // userserviceObj.logoutUser()
-                // console.log("After",sessionStorage)
             }         
             
         })

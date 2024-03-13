@@ -8,7 +8,6 @@ import UserDashboard from "./pages/user/UserDashboard";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import Welcome from "./pages/user/Welcome";
 import AdminWelcome  from "./pages/admin/AdminWelcome";
-import Profile from "./pages/user/Profile";
 
 import AdminProfile from "./pages/admin/AdminProfile";
 import ShowCategory from "./pages/admin/exam/ShowCategory";
@@ -19,6 +18,8 @@ import AddQuiz from "./pages/admin/exam/AddQuiz";
 import UserService from "./services/UserService";
 import CategoryService from "./services/CategoryService";
 import QuestionService from "./services/QuestionService";
+import UserQuizService from "./services/UserQuizService";
+import QuizService from "./services/QuizService";
 
 
 import UpdateQuiz from "./pages/admin/exam/UpdateQuiz";
@@ -30,11 +31,14 @@ import ExamPaper from "./components/TestModule/ExamPaper";
 import GaurdRoute from "./GaurdRoute";
 import ScoreDashboard from "./components/TestModule/ScoreDashboard";
 import Solution from "./components/TestModule/Solution";
+import AttemptedQuiz from "./pages/user/tests/AttemptedQuiz";
 
 
 const userserviceObj = new UserService();
 const categoryService = new CategoryService();
 const questionService = new QuestionService();
+const userQuizService = new UserQuizService();
+const quizService = new QuizService();
 
 
 
@@ -106,12 +110,13 @@ const router = createBrowserRouter([
         element:<AddCategory />
       },
       {
-        path:"add-category",
-        element:<AddCategory />
-      },
-      {
         path:"show-questions",
-        element:<ShowQuestions />
+        element:<ShowQuestions />,
+        loader:async ()=>{
+         const allQuestions= await questionService.getQuestions("All");
+         let tempData=allQuestions.data;
+        return tempData;
+        }
       },
       {
         path:"add-question",
@@ -132,6 +137,14 @@ const router = createBrowserRouter([
             {
                 path:"category/:category",
                 element:<ShowQuizzes />
+            },
+            {
+              path:"quizzes/attempted",
+              element:<GaurdRoute Component={AttemptedQuiz} />,
+              loader :async()=>{
+                const userAttemptedQuiz = await userQuizService.getAllAttemptedQuizResponse();
+                return userAttemptedQuiz.data;
+              }
             }
             
         ]
@@ -157,9 +170,11 @@ const router = createBrowserRouter([
       element:<GaurdRoute Component={ Solution } />,
       loader:async ({params})=>{
         const questions= await questionService.getQuestionsByQuizIdWithAnswer(params.quizId);
-        return  questions.data;
+        const quiz = await quizService.getQuizzById(params.quizId);
+        return  [questions.data,quiz.data];
       }
-    }
+    },
+   
 
   ]);
   

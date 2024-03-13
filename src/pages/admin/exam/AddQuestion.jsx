@@ -1,4 +1,4 @@
-import { Alert, Button, Card, CardActions, CardContent, CardHeader, Collapse, FormControl, IconButton, InputBase, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import {  Button, Card, CardActions, CardContent, CardHeader, FormControl,  InputLabel, MenuItem, Select, Switch, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import { Form } from 'react-router-dom';
 
@@ -34,7 +34,7 @@ function AddQuestion() {
   // const [quizChip, setQuizChip]=useState([]);
   const [question,setQuestion]=useState({
     title:"",
-    explaination:"",
+    explanation:"",
     answer:"",
     questionType:"",
     options:{   
@@ -43,11 +43,10 @@ function AddQuestion() {
       option3:"",
       option4:"",
     },
-    examTags:[],
+    examTags:"",
     topic:"",
     subject:"",
-    quizList:[]
-
+    quizIds:""
 });
 const [quizName, setQuizName] = useState('');
 const [quizzes,setQuizzes] = useState([]);
@@ -99,21 +98,20 @@ function  handleUserInput(event){
   }
   }
   else if(name==="tag"){
-    if(event.key == 'Enter'){
+    if(event.key === 'Enter'){
       setExamTagsChip(prev=>{
         return [...prev,{ key: prev.length, label: value }]
        })
 
        setQuestion(prev=>{
-        return {...prev,examTags:[...prev.examTags,value]}
+        return {...prev,examTags:prev.examTags+value+","}
        })
        setTagMErr(false)
     } 
   }
   else if(name==="quiz"){
-
     setQuestion(prev=>{
-      return {...prev,quizList:[...prev.quizList,value]}
+      return {...prev,quizIds:prev.quizIds+value+","}
     })
     setQuizName(value)
     
@@ -122,13 +120,14 @@ function  handleUserInput(event){
     setQuestion({...question,[name]:value})
     switch (name){
       case "title": setTitleErr(false); break;
-      case "explaination": setExplainErr(false); break;
+      case "explanation": setExplainErr(false); break;
       case "answer": setAnswerErr(false); break;
       case "topic": setTopicErr(false); break;
       default:setSubjectErr(false)  ; break;      
     }
   } 
   
+  console.log(question)
 }
 
 const handleSubmit=()=>{
@@ -137,7 +136,7 @@ const handleSubmit=()=>{
     setTitleErr(true)
     isFine=false
   }
-  if(question.explaination.trim()===''||question.explaination===null){
+  if(question.explanation.trim()===''||question.explanation===null){
     setExplainErr(true)
     isFine=false
   }
@@ -176,30 +175,98 @@ const handleSubmit=()=>{
   }
 
   if(!isFine)return ;
+  const formData = new FormData();
+  formData.append("question",JSON.stringify(question))
+  let formImages=[];
+  if(titleImg){
+    formImages.push(titleImg)
+    
+  }
+  if(checked){
+    formImages.push(op1File)  
+    formImages.push(op2File)  
+    formImages.push(op3File)  
+    formImages.push(op4File) 
   
+  }  
+  for (const image of formImages) {
+    formData.append("formImages", image);
+  }
 
-  
-  questionServiceObj.createQuestion(question).then(response=>{
-      setResponseMsg(response.data.massage)
-      setOpen(true)
-      setColor("success")
-  })
-  .catch(error=>{
-      setResponseMsg(error.data.massage)
-      setOpen(true)
-      setColor("warning")
-    //console.log(error)
-  })
-  //console.log(question)
+  if(formImages.length!==0){
+    questionServiceObj.createQuestion(formData).then(response=>{
+      if(response.status===201){
+        const questionId=response.data.massage;
+        console.log("questionId ",questionId)
+        setResponseMsg("Question saved with id : "+questionId)
+        setOpen(true)
+        setColor("success")   
+      }
+    })
+    .catch(error=>{
+        setResponseMsg(error.data.massage)
+        setOpen(true)
+        setColor("warning")
+    })
+  }else{
+    questionServiceObj.createQuestionWithOutImages(formData).then(response=>{
+      if(response.status===201){
+        const questionId=response.data.massage;
+        console.log("questionId ",questionId)
+        setResponseMsg("Question saved with id : "+questionId)
+        setOpen(true)
+        setColor("success")   
+      }
+    })
+    .catch(error=>{
+        setResponseMsg(error.data.massage)
+        setOpen(true)
+        setColor("warning")
+    })
+  }
 }
 
 const tagChipDelete = (chipToDelete) => () => {
   setExamTagsChip((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
 };
 
-const quizChipDelete = (chipToDelete) => () => {
-  setExamTagsChip((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
-};
+const [checked, setChecked] = useState(false);
+
+const handleSwitchAction = (event) => {
+        setChecked(event.target.checked);
+        setQuestion(pre=>{
+          return {...pre,"isImageOps":true}
+        })
+    };
+
+const [op1File,setOp1File]=useState(null);
+const [op2File,setOp2File]=useState(null);
+const [op3File,setOp3File]=useState(null);
+const [op4File,setOp4File]=useState(null);
+const [titleImg,setTitleImg]=useState(null);
+function handleFileInput(event){
+  const value=event.target.files[0];
+  const name=event.target.name;
+  if(name==="option1" || name==="option2" || name==="option3" || name==="option4"){
+    setQuestion(pre=> {
+      return {...pre,"options":{...pre.options,[name]:value.name}}
+    })    
+  } 
+  if(name==="image"){
+    setQuestion(pre=>{
+      return {...pre,[name]:value.name}
+    })
+    setTitleImg(value)
+  }
+  switch (name){
+    case "option1": setOp1File(value); break;
+    case "option2": setOp2File(value); break;
+    case "option3": setOp3File(value); break;
+    case "option4":setOp4File(value)  ; break;      
+    default : break;
+  }
+}
+
 
   return (
     <div className='container'>
@@ -211,14 +278,28 @@ const quizChipDelete = (chipToDelete) => () => {
                     <CardContent >
                       <Form>
                         <TextField error={titleErr}  fullWidth id="title" size="small" label="title" variant="outlined" margin="dense" onChange={handleUserInput} name='title' value={question.title}/>
-                        <TextField error={explainErr} fullWidth id="explaination" size="small" label="explaination" variant="outlined" multiline rows={4}
-                         margin="dense" onChange={handleUserInput} name='explaination' value={question.explaination} />
+                        <TextField error={op1Err} type='file' fullWidth id="image" size="small"   margin="dense" onChange={handleFileInput} name='image'  />
+                        <TextField error={explainErr} fullWidth id="explanation" size="small" label="explanation" variant="outlined" multiline rows={4}
+                         margin="dense" onChange={handleUserInput} name='explanation' value={question.explanation} />
                         
-                        <TextField error={op1Err} fullWidth id="option1" size="small" label="option1" variant="outlined" margin="dense" onChange={handleUserInput} name='option1' value={question.options.option1}/>
-                        <TextField error={op2Err} fullWidth id="option2" size="small" label="option2" variant="outlined" margin="dense" onChange={handleUserInput} name='option2' value={question.options.option2}/>
-                        <TextField error={op3Err} fullWidth id="option3" size="small" label="option3" variant="outlined" margin="dense" onChange={handleUserInput} name='option3' value={question.options.option3}/>
-                        <TextField error={op4Err} fullWidth id="option4" size="small" label="option4" variant="outlined" margin="dense" onChange={handleUserInput} name='option4' value={question.options.option4}/>
                         
+                        <Switch checked={checked} onChange={handleSwitchAction} inputProps={{"area-label":"controlled"}} />
+                               
+                        {checked?
+                          <>
+                          <TextField error={op1Err} type='file' fullWidth id="option1" size="small"   margin="dense" onChange={handleFileInput} name='option1'  />
+                          <TextField error={op2Err} type='file' fullWidth id="option2" size="small"   margin="dense" onChange={handleFileInput} name='option2' />
+                          <TextField error={op3Err} type='file' fullWidth id="option3" size="small"   margin="dense" onChange={handleFileInput} name='option3' />
+                          <TextField error={op4Err} type='file' fullWidth id="option4" size="small"   margin="dense" onChange={handleFileInput} name='option4' />
+                          </>
+                        :  <>
+                          <TextField error={op1Err} fullWidth id="option1" size="small" label="option1" variant="outlined" margin="dense" onChange={handleUserInput} name='option1' value={question.options.option1} />
+                          <TextField error={op2Err} fullWidth id="option2" size="small" label="option2" variant="outlined" margin="dense" onChange={handleUserInput} name='option2' value={question.options.option2}/>
+                          <TextField error={op3Err} fullWidth id="option3" size="small" label="option3" variant="outlined" margin="dense" onChange={handleUserInput} name='option3' value={question.options.option3}/>
+                          <TextField error={op4Err} fullWidth id="option4" size="small" label="option4" variant="outlined" margin="dense" onChange={handleUserInput} name='option4' value={question.options.option4}/>
+                          </>
+                        }
+                         
                         <FormControl fullWidth size="small" margin="dense">
                             <InputLabel id="answer">Answer</InputLabel>
                             <Select error={answerErr} labelId="answer" id="answer" value={question.answer} label="Answer" onChange={handleUserInput} name="answer"                            >
@@ -255,7 +336,10 @@ const quizChipDelete = (chipToDelete) => () => {
                             <InputLabel id="quiz">quiz</InputLabel>
                             <Select labelId="quiz" id="quiz" value={quizName} label="quiz" onChange={handleUserInput} name="quiz" >
                                 <MenuItem value="none"><em>None</em></MenuItem> 
-                                {quizzes.map(quiz=><MenuItem key={quiz.qid} value={quiz.qid}>{quiz.title}</MenuItem>)}
+                                {quizzes.map(quiz=>{
+                                  if(quiz.questionLeft>0)
+                                  return <MenuItem key={quiz.qid} value={quiz.qid} >{quiz.title}</MenuItem>
+                                  })}
                             </Select>
                         </FormControl>                        
                       </Form>

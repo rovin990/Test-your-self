@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom';
+import React, {  useEffect, useState } from 'react'
+import { Link, useLoaderData } from 'react-router-dom';
 
 import { Button, Card, CardActions, CardContent, CardHeader } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -7,77 +7,72 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import QuestionService from '../../../services/QuestionService';
 import Model from '../../../utility/Model';
 
-
 const questionServiceObj = new QuestionService();
 
-const questemp=[{
-  "id":1,
-  "title":"What is Java?",
-  "answerList":[
-      {
-          "explaination":"Java is object oriented programming language. which used widely for web application , desktop , mobile application"
-      }
-  ],
-  "questionType":"descriptive",
-  "options":{
-      "option1":"OPP language.",
-      "option2":"Widely used for web application",
-      "option3":"Platform independent language.",
-      "option4":"Platform independent language."
-  },
-  "examTags":["ssc","rbi","sbi","nicl"]
-},
-{
-  "id":2,
-  "title":"comparable vs coomparator ?",
-  "answerList":[
-      {
-          "explaination":"comparable is used for sorting objects by natural sorting order . means comparable can only sort by it is define . but we can implement class for coomparator for different class variable and can pass to sort() method"
-      }
-  ],
-  "questionType":"descriptive",
-  "options":{
-      "option1":"only one comparable can be used for a class while more than one coomparator can be used",
-      "option2":"Widely used for web application",
-      "option3":"Platform independent language."
-  },
-  "examTags":["ssc","rbi","sbi","nicl","google"]
-}]
+
+
 
 function ShowQuestions() {
-  const [questions,setQuestions] = useState([]);
+  const allQuestions=useLoaderData();  
+  const [questions,setQuestions] = useState(allQuestions);
   const [responseMsg,setResponseMsg]=useState("")
   const [open,setOpen] =useState(false)
   const [color,setColor]=useState("");
 
+  console.log("All question",questions)
+  
+
 
   useEffect(()=>{
-      loadQuestions()
+    loadQuestions()    
   },[])
+
+
+
 
  function loadQuestions(){
   questionServiceObj.getQuestions("All").then(response=>{
-          console.log(response)
-          if(response.status==200){
-              setQuestions(response.data)
+          console.log("All question",response)
+          if(response.status===200){
+            let data=response.data;           
+            setQuestions(data)
           }
       }).catch(error=>{
           console.log(error)
       })
+
+  
   }
 
+// function fileterQuestion(){
+//   const questionHaveImage=questions.filter(item=>item.image).map(item=>item);
+//     const leftQuestions=questions.filter(item=>(!item.image)).map(item=>item);
+//     for(let i=0;i<questionHaveImage.length;i++){
+//         questionServiceObj.getQuestionImage("question_"+questionHaveImage[i].id+"_"+questionHaveImage[i].image)
+//         .then(imageRes=>{
+//           questionHaveImage[i].imageData="data:image/png;base64,"+imageRes.data
+//             if(i===questionHaveImage.length-1){
+//                setIsLoaded(true);
+//                setQuestions([...leftQuestions,...questionHaveImage]);
+//                console.log("in fileter")
+//             }
+//           })
+//     }
+//     if(questionHaveImage.length===0)setIsLoaded(true)
+// }
 
-  function deleteQuestion(questionId){
-    questionServiceObj.deleteQuestion(questionId).then(response=>{
+
+  function deleteQuestion(question){
+    questionServiceObj.deleteQuestion(question.id).then(response=>{
           setOpen(true)
           setResponseMsg(response.data)
           loadQuestions()
           setColor("success")
       }).catch(error=>{
-              console.log(error)
-              setOpen(true)
-              setResponseMsg(error.data)
-              setColor("warning")
+        console.log(error)
+        setOpen(true)
+        setResponseMsg(error.data)
+        setColor("warning")
       })        
   }
 
@@ -91,12 +86,14 @@ function ShowQuestions() {
           <div className='container'>
               <CardHeader title="All Questions" />
           </div>
-          {/* {console.log(questions) } */}
           {questions.map((question,index)=>{
           return( <Card key={question.id} className='my-3' style={{backgroundColor:'#f0f8ff'}}>
-              
-              <CardContent>
-              <CardHeader title={question.title}/>
+                <CardHeader title={question.title}/> 
+              {question.questionImage && 
+                <div className='container text-center'>
+                  <img src={`data:image/png;base64,`+question.questionImage.data}  alt='Question '/>
+                </div> }
+              <CardContent>              
                   <ol>
                     {question.options.option1 &&<li>{question.options.option1}</li>}
                     {question.options.option2 &&<li>{question.options.option2}</li>}
@@ -106,7 +103,7 @@ function ShowQuestions() {
               </CardContent>
               <CardActions >
                 <div className='container text-center mt-1'>
-                    <Button variant='outlined' color='success' className='mx-1' onClick={()=>deleteQuestion(question.id)} startIcon={<DeleteIcon />}>delete</Button>
+                    <Button variant='outlined' color='success' className='mx-1' onClick={()=>deleteQuestion(question)} startIcon={<DeleteIcon />}>delete</Button>
                 </div> 
               </CardActions>
           </Card>)

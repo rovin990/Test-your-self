@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom';
 import Navbar from '../Navbar';
 import { Button, Card, CardHeader, Divider } from '@mui/material';
-import { purple } from '@mui/material/colors';
 
 import QuizService from '../../services/QuizService';
 
@@ -13,13 +12,10 @@ const quizCss={
   width:'30px',
   height:'30px',
   borderRadius: '100%',
-  // backgroundColor:purple.A200,
 }
 function ScoreDashboard() {
   const location = useLocation();
   const quizAnalysis=location.state;
-
-  // console.log()
 
   const [quiz,setQuiz]=useState({});
 
@@ -100,14 +96,10 @@ function ScoreDashboard() {
           </div>
 
           <div className='col-md-3 '>
-          <CardHeader title="What you can next!" titleTypographyProps={{variant:'h3', fontSize:1.125+'rem',fontWeight:400,lineHeight:1.75+'rem'}}/>
-          
-          {/* <Card > */}
+            <CardHeader title="What you can next!" titleTypographyProps={{variant:'h3', fontSize:1.125+'rem',fontWeight:400,lineHeight:1.75+'rem'}}/>
             <Link to="/quiz/quiz-instruction" state={quiz}><Button variant='outlined' color='primary' className='mx-1'>Re-Attempt</Button></Link>
-            <Link to={`/quiz/solution/`+quiz.qid} state={[quiz,quizAnalysis.responses]} ><Button variant='outlined' color='primary' className='mx-1'>Solution</Button> </Link>
-            <Button variant='outlined' color='primary' className='mx-1'>Tests</Button>
-          {/* </Card> */}
-            
+            <Link to={`/quiz/solution/`+quiz.qid} state={quizAnalysis.responses} ><Button variant='outlined' color='primary' className='mx-1'>Solution</Button> </Link>
+            <Link to="/user/category/All" ><Button variant='outlined' color='primary' className='mx-1'>Tests</Button></Link>
           </div>
           
         </div>

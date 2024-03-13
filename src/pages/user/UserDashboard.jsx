@@ -1,5 +1,6 @@
-import { Card, CardContent, Link, List, ListItem, ListItemButton, ListItemIcon, ListItemLinkButton, ListItemLinkIcon, ListItemLinkText, ListItemText } from '@mui/material'
+import { Card, CardContent, Divider, List, ListItem, ListItemButton, ListItemIcon,  ListItemText } from '@mui/material'
 import InboxIcon from '@mui/icons-material/Inbox';
+import QuizIcon from '@mui/icons-material/Quiz';
 import HomeIcon from '@mui/icons-material/Home';
 import React, { useState } from 'react'
 import {Outlet, useLoaderData, useNavigate } from 'react-router-dom'
@@ -12,7 +13,7 @@ function ListItemLink(props) {
     const navigate = useNavigate();
 
     const handleOnclick = ()=>{
-        navigate(`/user/category/`+to)
+        navigate(`/user`+to)
     }
   
     return (
@@ -26,17 +27,12 @@ function ListItemLink(props) {
         </ListItem>
     );
   }
-  
-//   ListItemLink.propTypes = {
-//     icon: PropTypes.element,
-//     primary: PropTypes.string.isRequired,
-//     to: PropTypes.string.isRequired,
-//   };
+
 
 function UserDashboard() {
     const loaderData = useLoaderData()
     console.log(loaderData)
-    const [categories,setCategories]= useState(loaderData);
+    const [categories]= useState(loaderData);
 
     
   return (
@@ -45,24 +41,22 @@ function UserDashboard() {
         <div className='container-fluid ' style={{marginTop:70+'px'}}>
             <div className='row '>
                 <div className='col-md-2'>
-                    <Card>
+                    <Card style={{backgroundColor:'#fff4f5'}}>
                         <CardContent>
                             <nav aria-label="main mailbox folders">
                                 <List>
-                                    <ListItemLink to="All" primary="All-quizzes" icon={<HomeIcon />} />
-                                    {categories.map(category=><ListItemLink to={category.title} primary={category.title} icon={<InboxIcon />} />)}
+                                    <ListItemLink to="/category/All" primary="All-quizzes" icon={<HomeIcon />} />
+                                    {categories.map(category=><ListItemLink to={`/category/`+category.title} primary={category.title} icon={<InboxIcon />} />)}
                                     
                                 </List>
+                                <Divider />
+                                <ListItemLink to="/quizzes/attempted" primary="Attempted-quizzes" icon={<QuizIcon />} />
                             </nav>
                         </CardContent>
                     </Card>
                 </div>
-                <div className='col-md-10'>
-                    <Card  style={{height:100+'%'}}>
-                        <CardContent>
-                            <Outlet />
-                        </CardContent>
-                    </Card>
+                <div className='col-md-10' style={{height:100+'%'}}>
+                    <Outlet />
                 </div>
             </div>
         </div>

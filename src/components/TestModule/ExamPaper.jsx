@@ -23,11 +23,14 @@ function ExamPaper() {
   const quiz= location.state;
   const questions=useLoaderData();
 
+  // console.log(questions)
+
   const [activeButton, setActiveButton] = useState(0); // when we click a particular question no button than activeButton=true
   
   const loggedInUser=JSON.parse(globalService.getUserDetails()); // loggedInUser details
 
   const [currentQuestion, setCurrentQuestion] = useState(questions[0]);
+  const [titleData,setTitleData] =useState(currentQuestion.title.split("#"));
   visitedQuestions.set(currentQuestion.id,"visited")
   const [checkedValue,setCheckedValue]=useState(''); //user selected value state variable
   
@@ -38,41 +41,32 @@ function ExamPaper() {
     // console.log(responseQuestions)
   }
 
-  // useEffect(()=>{
-  //   window.history.pushState(null, document.title, window.location.href);
-  //   window.addEventListener('popstate', function (event){
-  //       window.history.pushState(null, document.title,  window.location.href);
-  //   });
-  // },[])
 
   function chnageCurrentQuestion(clickedQuestion,index){
     lastVisitedQuestionId=currentQuestion.id;
     setCurrentQuestion(clickedQuestion)                 // set current question
+    setTitleData(clickedQuestion.title.split("#"))
     setActiveButton(index)                              //  apply color arrtirbute to clicked button
     currentQuestionIndex=index;                         //current question index
     visitedQuestions.set(clickedQuestion.id,"visited") //visited hashMap
 
-    //console.log("visitedQuestion.get(visitedQuestion) before check",visitedQuestions.get(lastVisitedQuestionId))
     if(visitedQuestions.get(lastVisitedQuestionId)!==undefined){
-      // console.log("visitedQuestion.get(visitedQuestion) ",visitedQuestions.get(lastVisitedQuestionId))
       document.getElementById(lastVisitedQuestionId).style.backgroundColor='red';
     }
     if(visitedQuestions.get(clickedQuestion.id)!==undefined){
       document.getElementById(clickedQuestion.id).style.backgroundColor='#9c27b0';
     }
-    // console.log("visitedQuestion :",visitedQuestions)
-    // console.log("lastVisitedQuestionId :",lastVisitedQuestionId,"currentQuestionId :",cq.id)
     
-    // console.log(document.getElementById(cq.id))
-   // console.log("responseQuestions.get(clickedQuestion.id)",responseQuestions.get(clickedQuestion.id),"clickedQuestion.id ",clickedQuestion.id)
     if(responseQuestions.get(clickedQuestion.id)!==undefined){ 
 
       setCheckedValue(responseQuestions.get(clickedQuestion.id)) //setting checked option if user responded the value
     }
+
+    console.log(currentQuestion)
   }
 
   const handleTestSubmit=()=>{
-    quizService.submitUserTest(quiz.qid,responseQuestions).then(res=>{
+    quizService.submitUserTest(quiz.qid,quiz.title,responseQuestions).then(res=>{
       if(res.status===200){
         navigate("/quiz/quiz-report",{state:res.data})
       }
@@ -92,6 +86,7 @@ function ExamPaper() {
     }
     else if(currentQuestionIndex>0){
       setCurrentQuestion(questions[currentQuestionIndex-1])
+      setTitleData(questions[currentQuestionIndex-1].title.split("#"))
       currentQuestionIndex--;
     }
     setActiveButton(currentQuestionIndex)
@@ -109,7 +104,7 @@ function ExamPaper() {
 
       setCheckedValue(responseQuestions.get(questions[currentQuestionIndex].id)) //setting checked option if user responded the value
     }
-    // console.log(currentIndex)
+    console.log(currentQuestion)
   }
 
   function changeNextAndSaveQuestion(){
@@ -122,6 +117,7 @@ function ExamPaper() {
     }
     else{
       setCurrentQuestion(questions[currentQuestionIndex+1])
+      setTitleData(questions[currentQuestionIndex+1].title.split("#"))
       console.log(questions[currentQuestionIndex+1])
       currentQuestionIndex++;
     }
@@ -132,7 +128,7 @@ function ExamPaper() {
       // console.log("visitedQuestion.get(visitedQuestion) ",visitedQuestions.get(lastVisitedQuestionId))
       document.getElementById(lastVisitedQuestionId).style.backgroundColor='red';
     }
-    if(visitedQuestions.get(questions[currentQuestionIndex].id)!==undefined){
+    if(visitedQuestions.get(questions[currentQuestionIndex].id)!==undefined){ //current question is visited question
       document.getElementById(questions[currentQuestionIndex].id).style.backgroundColor='#9c27b0';
     }
 
@@ -140,7 +136,7 @@ function ExamPaper() {
 
       setCheckedValue(responseQuestions.get(questions[currentQuestionIndex].id)) //setting checked option if user responded the value
     }
-    // console.log(currentIndex)
+    console.log(currentQuestion)
   }
 
   function changeClearResponse(){
@@ -177,7 +173,26 @@ function ExamPaper() {
       <div className="row">
         <div className="col-md-9">
           <Card style={{height:700+'px'}}>
-            <CardHeader title={currentQuestion.title} />
+            {titleData[0][0]!=="$" ? <CardHeader title={(currentQuestionIndex+1)+". "+titleData[0]} /> : <CardHeader title={(currentQuestionIndex+1)+". Statements"} />}
+            {titleData[0][0]==="$" && <div>
+                <ol>
+                 {titleData[0].split("$")[0] && <li>{titleData[0].split("$")[0]}</li> }
+                 {titleData[0].split("$")[1] && <li>{titleData[0].split("$")[1]}</li> }
+                 {titleData[0].split("$")[2] && <li>{titleData[0].split("$")[2]}</li> }
+                </ol>
+            </div>}
+            {currentQuestion.questionImage &&
+            <div className='container text-center'>
+                  <img src={`data:image/png;base64,`+currentQuestion.questionImage.data}  alt='Question '/>
+                </div> }
+            { titleData[1] && <div>
+              <CardHeader title="Conclusion" />
+                <ol>
+                 {titleData[1] && <li>{titleData[1]}</li> }
+                 {titleData[2] && <li>{titleData[2]}</li> }
+                 {titleData[3] && <li>{titleData[3]}</li> }
+                </ol>
+            </div> }
             <Divider/>
             <div className="mx-3 my-3">
             <RadioGroup
@@ -188,10 +203,14 @@ function ExamPaper() {
               
               className="ml-3"
             >
-             <FormControlLabel value={currentQuestion.options.option1} control={<Radio />} label={currentQuestion.options.option1} />
-             <FormControlLabel value={currentQuestion.options.option2} control={<Radio />} label={currentQuestion.options.option2} />
-             <FormControlLabel value={currentQuestion.options.option3} control={<Radio />} label={currentQuestion.options.option3} />
-             <FormControlLabel value={currentQuestion.options.option4} control={<Radio />} label={currentQuestion.options.option4} />
+             <FormControlLabel className="my-3" value={currentQuestion.options.option1} control={<Radio />}
+              label={currentQuestion.options.optionsImage?<img src={`data:image/png;base64,`+currentQuestion.options.optionsImage.option1}  alt='Question '/>:currentQuestion.options.option1} />
+             <FormControlLabel className="my-3" value={currentQuestion.options.option2} control={<Radio />} 
+             label={currentQuestion.options.optionsImage?<img src={`data:image/png;base64,`+currentQuestion.options.optionsImage.option2}  alt='Question '/>:currentQuestion.options.option2} />
+             <FormControlLabel className="my-3" value={currentQuestion.options.option3} control={<Radio />} 
+             label={currentQuestion.options.optionsImage?<img src={`data:image/png;base64,`+currentQuestion.options.optionsImage.option3}  alt='Question '/>:currentQuestion.options.option3} />
+             <FormControlLabel className="my-3" value={currentQuestion.options.option4} control={<Radio />} 
+             label={currentQuestion.options.optionsImage?<img src={`data:image/png;base64,`+currentQuestion.options.optionsImage.option4}  alt='Question '/>:currentQuestion.options.option4} />
             </RadioGroup>
             </div>
           </Card>
