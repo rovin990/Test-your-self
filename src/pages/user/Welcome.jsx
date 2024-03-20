@@ -1,10 +1,12 @@
 import React from 'react'
+import Payment from "../../components/paymentModule/Payment"
 
 function Welcome() {
   return (
-    <div >
-      used for promotion and other latest stuff
-    </div>
+    <>
+      <Payment />
+
+    </>
   )
 }
 

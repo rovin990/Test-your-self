@@ -1,35 +1,36 @@
 import axios from "axios";
-const BASE_URL="http://localhost:8080"
+
+import { ENVConstant } from "../constants/ENVConstant";
 
 class QuizService{
 
     async getQuizz(filter){
-        console.log(BASE_URL+"/"+filter)
+        // console.log(BASE_URL+"/"+filter)
         
-        return await axios.get(BASE_URL+"/quiz/"+filter,{withCredentials:true });
+        return await axios.get(ENVConstant.BASE_URL+"/quiz/"+filter,{withCredentials:true });
     }
 
     async getQuizzById(quizId){
-        return await axios.get(BASE_URL+"/quiz?quizId="+quizId,{withCredentials:true});
+        return await axios.get(ENVConstant.BASE_URL+"/quiz?quizId="+quizId,{withCredentials:true});
     }
 
     async createQuiz(quiz){
-        return await axios.post(BASE_URL+"/quiz",quiz,{withCredentials:true })
+        return await axios.post(ENVConstant.BASE_URL+"/quiz",quiz,{withCredentials:true })
     }
 
     async updateQuiz(quiz){
-        return await axios.put(BASE_URL+"/quiz",quiz,{withCredentials:true });
+        return await axios.put(ENVConstant.BASE_URL+"/quiz",quiz,{withCredentials:true });
     }
 
     async deleteQuiz(quizId){
-        return await axios.delete(BASE_URL+"/quiz/"+quizId,{withCredentials:true})
+        return await axios.delete(ENVConstant.BASE_URL+"/quiz/"+quizId,{withCredentials:true})
     }
 
     async getActiveQuizzes(){
-        return await axios.get(BASE_URL+"/quiz/active",{withCredentials:true});
+        return await axios.get(ENVConstant.BASE_URL+"/quiz/active",{withCredentials:true});
     }
     async getCategoryActiveQuizzes(category){
-        return await axios.get(BASE_URL+"/quiz/category/active/"+category,{withCredentials:true});
+        return await axios.get(ENVConstant.BASE_URL+"/quiz/category/active/"+category,{withCredentials:true});
     }
 
     async submitUserTest(quizId,quizTitle,responseData){
@@ -45,7 +46,7 @@ class QuizService{
                 responses:temp
         }
         
-        return await axios.post(BASE_URL+"/test-response",data,{withCredentials:true})
+        return await axios.post(ENVConstant.BASE_URL+"/test-response",data,{withCredentials:true})
     }
 }
 

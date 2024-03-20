@@ -2,17 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import axios from "axios";
-import {RouterProvider, redirect} from "react-router-dom";
+import {RouterProvider} from "react-router-dom";
 
 import router from './router';
 import APPConstant from './constants/APPConstant';
 
 
 
-
-// const axiosInstance = axios.create({
-//     baseURL:ENVConstant.BASE_URL
-// })
 // request interceptors
 axios.interceptors.request.use((request)=>{
     let csrf = sessionStorage.getItem("XSRF-TOKEN");
@@ -31,18 +27,19 @@ axios.interceptors.request.use((request)=>{
     return request;
 },
 error => {
-    Promise.reject(error)
+   return  Promise.reject(error)
   })
 
 axios.interceptors.response.use((response)=>{
   console.log(response)
   
   return response;
-},reject=>{
-  if(reject.response.data===APPConstant.JWT_TOKEN_INVALID || reject.response.data===APPConstant.JWT_TOKEN_EXPIRE){
+},error=>{
+  if(error.response.data===APPConstant.JWT_TOKEN_INVALID || error.response.data===APPConstant.JWT_TOKEN_EXPIRE){
     window.location.href="/logout";
   }
-  console.log(reject)
+  // console.log(reject)
+  return Promise.reject(error);
 })
 
 

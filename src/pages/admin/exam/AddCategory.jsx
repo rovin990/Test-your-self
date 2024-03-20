@@ -3,9 +3,7 @@ import React, { useState } from 'react'
 import { Form } from 'react-router-dom';
 import CategoryService from '../../../services/CategoryService';
 
-import { red } from '@mui/material/colors';
-
-import display from '../../../utility/Color';
+import Model from '../../../utility/Model';
 
 const catService= new CategoryService();
 
@@ -21,6 +19,15 @@ function AddCategory() {
     const [preview,setPreview]=useState(null)
 
     const [error ,setError] = useState(false);
+
+
+
+    const [open,setOpen] = useState(false);
+    const [responseMsg,setResponseMsg]=useState("");
+    const [color,setColor] = useState("");
+    function handleDialog(){
+    setOpen(false)        
+    }
 
     const handleUserInput = (event)=>{
         const name=event.target.name;
@@ -53,21 +60,30 @@ function AddCategory() {
         }
         //save category
         catService.saveCategory(category).then(response=>{
-
+            console.log(response)
             if(response.status==201){
                 const formData = new FormData();
                 formData.append("file",file)
                 catService.saveFile(formData).then(res=>{
                     console.log(res)
+                    setResponseMsg("Category is saved with Cid "+response.data.cid)
+                    setColor('success')
+                    setOpen(true)
                 })
                 .catch(error=>{
                     console.log(error)
+                    setResponseMsg("Something went wrong try againg")
+                    setColor('warning')
+                    setOpen(true)
                 })
             }
 
         })
         .catch(error=>{
             console.log(error)
+            setResponseMsg("Something went wrong try againg")
+            setColor('warning')
+            setOpen(true)
         })
         
     }
@@ -75,6 +91,7 @@ function AddCategory() {
     <div className='container'>
         <div className='row'>
             <div className='col-md-7 offset-md-2'>
+             <Model color={color} responseMsg={responseMsg} isOpen={open} handleDialog={handleDialog}/>
                 
                 <CardHeader title="New category" subheader="Please provide valid data"/>
                 <Form>

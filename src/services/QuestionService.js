@@ -1,31 +1,32 @@
 import axios from "axios";
-const BASE_URL="http://localhost:8080"
+
+import { ENVConstant } from "../constants/ENVConstant";
 
 class QuestionService{
     async getQuestions(filter){        
-        return await axios.get(BASE_URL+"/question/"+filter,{withCredentials:true });
+        return await axios.get(ENVConstant.BASE_URL+"/question/"+filter,{withCredentials:true });
     }
 
     async createQuestion(formData){
-        return await axios.post(BASE_URL+"/question",formData,{withCredentials:true })
+        return await axios.post(ENVConstant.BASE_URL+"/question",formData,{withCredentials:true })
     }
     async createQuestionWithOutImages(formData){
-        return await axios.put(BASE_URL+"/question",formData,{withCredentials:true })
+        return await axios.put(ENVConstant.BASE_URL+"/question",formData,{withCredentials:true })
     }
 
     async updateQuestion(question){
-        return await axios.put(BASE_URL+"/question",question,{withCredentials:true});
+        return await axios.put(ENVConstant.BASE_URL+"/question",question,{withCredentials:true});
     }
 
     async deleteQuestion(questionId){
-        return await axios.delete(BASE_URL+"/question/"+questionId,{withCredentials:true })
+        return await axios.delete(ENVConstant.BASE_URL+"/question/"+questionId,{withCredentials:true })
     }
 
     async getQuestionsByQuizId(quizId){
-        return await axios.get(BASE_URL+"/question/quiz/"+quizId,{withCredentials:true })
+        return await axios.get(ENVConstant.BASE_URL+"/question/quiz/"+quizId,{withCredentials:true })
     }
     async getQuestionsByQuizIdWithAnswer(quizId){
-        return await axios.get(BASE_URL+"/question/quiz/"+quizId,{withCredentials:true})
+        return await axios.get(ENVConstant.BASE_URL+"/question/quiz/"+quizId,{withCredentials:true})
     }
     
 }

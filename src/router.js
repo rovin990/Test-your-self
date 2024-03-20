@@ -32,6 +32,7 @@ import GaurdRoute from "./GaurdRoute";
 import ScoreDashboard from "./components/TestModule/ScoreDashboard";
 import Solution from "./components/TestModule/Solution";
 import AttemptedQuiz from "./pages/user/tests/AttemptedQuiz";
+import ViewPaper from "./components/TestModule/ViewPaper";
 
 
 const userserviceObj = new UserService();
@@ -152,6 +153,10 @@ const router = createBrowserRouter([
     {
       path:"quiz/quiz-instruction",
       element:<Instructions />
+    },
+    {
+      path:"quiz/view",
+      element:<GaurdRoute Component={ ViewPaper }/>
     },
     {
       path:"quiz/start/:quizId",
