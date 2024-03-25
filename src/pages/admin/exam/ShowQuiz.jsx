@@ -54,22 +54,39 @@ function ShowQuiz() {
             <CardHeader title="All Quizzes" />
         </div>
         {quizzes.map(quiz=>{
-        return( <Card key={quiz.qid} className='my-3' style={{backgroundColor:'#f0f8ff'}}>
+        return( <Card key={quiz.qid} className='container my-3' style={{backgroundColor:'#f0f8ff'}}>
             <CardHeader title={quiz.title} subheader={quiz.description}/>
             <CardContent>
                 <p>{quiz.description}</p>
             </CardContent>
             <CardActions>
-                <Link to={"show-questions"}>
-                    <Button variant="contained" color='success'  className='mx-1'>Questions</Button>
-                </Link>
-                <Button   color='secondary'  className='mx-1' >Max Marks : {quiz.maxMark}</Button>
-                <Button  color='secondary' className='mx-1'   >Questions : {quiz.noOfQuestion}</Button>
-                <Button  color='secondary' className='mx-1' >Attempts</Button>
-                <Link to={"/admin/update-quiz"} state={quiz}>
-                     <Button variant="contained" color='success' className='mx-1' >Update</Button>
-                </Link>                
-                <Button variant="contained" color='success' className='mx-1' onClick={()=>deleteQuiz(quiz.qid)} startIcon={<DeleteIcon />}>Delete</Button>
+                <div className='container'>
+                    <div className='row'>
+                        <div className='col-md-2 col-xs-auto my-sm-2'>
+                            <Link to={"show-questions"}>
+                                <Button variant="contained" color='success'  className='mx-1'>Questions</Button>
+                            </Link>
+                        </div>
+                        <div className='col-md-2 col-xs-auto my-sm-2'>
+                            <Button  color='secondary'  className='mx-1 ' >Maxs_Marks : {quiz.maxMark}</Button>
+                         </div>
+                        <div className='col-md-2 col-xs-auto my-sm-2'>
+                            <Button  color='secondary' className='mx-1'   >Questions : {quiz.noOfQuestion}</Button>
+                        </div>
+                        <div className='col-md-2 col-xs-auto my-sm-2'>
+                            <Button  color='secondary' className='mx-1' >Attempts</Button>               
+                        </div>
+                        <div className='col-md-2 col-xs-auto my-sm-2'>
+                            <Link to={"/admin/update-quiz"} state={quiz}>
+                                <Button variant="contained" color='success' className='mx-1' >Update</Button>
+                            </Link>                
+                        </div>
+                        <div className='col-md-2 col-xs-auto my-sm-2'>
+                            <Button variant="contained" color='success' className='mx-1' onClick={()=>deleteQuiz(quiz.qid)} startIcon={<DeleteIcon />}>Delete</Button>                
+                        </div>
+                    </div>
+                </div>
+                
             </CardActions>
         </Card>)
 

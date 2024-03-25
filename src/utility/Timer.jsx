@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-function Timer({examTimeInMins,width}) {    
+function Timer({examTimeInMins,width,actionOnTimeEnd}) {    
     const [hour,setHour]=useState(Math.floor((examTimeInMins/60)));
     const [minutes,setMinutes]=useState(Math.floor((examTimeInMins%60)-1));
     const [second,setSecond]=useState(59);
@@ -34,6 +34,10 @@ function Timer({examTimeInMins,width}) {
             }
         },1000)
 
+        if(deadline===0){
+            actionOnTimeEnd()
+        }
+
         return ()=>clearInterval(interval)
 
         
@@ -43,16 +47,10 @@ function Timer({examTimeInMins,width}) {
 
     
   return (
-    <div className='card' style={{width:width+'px',marginTop:10+'%'}}>
-        {/* <div className='card-header' style={{padding:0,margin:0}}>
-            <p className='text-center' style={{padding:0,margin:0}}>Timer</p>
-        </div>         */}
+    <div className='card' style={{width:width+'px',marginTop:4+'%'}}>
         <div className='card-body '>
             <div className='d-flex justify-content-center'>
                 <p> {hour<10?"0"+hour:hour} : {minutes<10?"0"+minutes:minutes} : {second<10?"0"+second:second}</p>
-            </div>
-            <div class="progress">
-            <div class="progress-bar bg-success progress-bar-striped" role="progressbar" style={{width: timer +'%'}} aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">{timer}%</div>
             </div>
         </div>
     </div>

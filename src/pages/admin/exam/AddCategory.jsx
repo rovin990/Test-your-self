@@ -89,8 +89,8 @@ function AddCategory() {
     }
   return (
     <div className='container'>
-        <div className='row'>
-            <div className='col-md-7 offset-md-2'>
+        <div className='row my-3'>
+            <div className='col-md-7 col-sm offset-md-2 '>
              <Model color={color} responseMsg={responseMsg} isOpen={open} handleDialog={handleDialog}/>
                 
                 <CardHeader title="New category" subheader="Please provide valid data"/>
@@ -105,7 +105,7 @@ function AddCategory() {
                     <Button variant="contained" color='success' className='mx-1' onClick={saveCategory}>Save</Button>
                 </div>
             </div>
-            <div className='col-md-3 d-flex justify-content-center'>
+            <div className='col-md-3 col-sm my-4 d-flex justify-content-center'>
                 <div className="align-self-center">
                     <label >Image Preview</label>
                     <img  src={preview} style={logoCss}/>

@@ -402,11 +402,9 @@ i {
 
 .correct{
   background-color: #2f9d2f;
-  height: 40px;
   color: white;
 }
 .wrong{
   background-color:#e03a3a;
-  height: 40px;
   color: white;
 }

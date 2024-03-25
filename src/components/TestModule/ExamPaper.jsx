@@ -77,6 +77,10 @@ function ExamPaper() {
     })
   }
 
+  function actionOnTimeEnd(){
+    handleTestSubmit()
+  }
+
   function changePreviousQuestion(){
     lastVisitedQuestionId=questions[currentQuestionIndex].id;
     visitedQuestions.set(lastVisitedQuestionId,"visited")
@@ -159,20 +163,29 @@ function ExamPaper() {
             <b style={{textDecoration:'underline'}}><CardHeader title={quiz.title} /></b>
             <CardContent>
             <Button variant="outlined" color="success" className="mx-1">{loggedInUser.name}</Button>
-            <Button variant="outlined" className="mx-1">{new Date().getDate()+ "/"}{new Date().getMonth()+"/"}{new Date().getFullYear()}</Button>
-            <Button variant="outlined" className="mx-1">maxMark :{quiz.maxMark}</Button>
-            <Button variant="outlined" className="mx-1">noOfQuestion :{quiz.noOfQuestion}</Button>
+            <Button variant="outlined" className="mx-1">{new Date().getDate()+ "/"}{new Date().getMonth()+1+"/"}{new Date().getFullYear()}</Button>
+            <Button variant="outlined" className="mx-1">Marks :{quiz.maxMark}</Button>
+            <Button variant="outlined" className="mx-1 my-2">Questions :{quiz.noOfQuestion}</Button>
             </CardContent>
           </Card>
           
         </div>
-        <div className="col-md-3" >
-        <Timer examTimeInMins='10' width='200'/>
+        <div className="col-md-3 " >
+            <div className="container text-center">
+               <Timer examTimeInMins='10' width='150' actionOnTimeEnd={actionOnTimeEnd}/>
+            </div>
         </div>
       </div>
       <div className="row">
+      <div className="col-md-9 d-flex my-2">
+                <Button variant="contained" size="small" color="primary" onClick={changePreviousQuestion} className="mx-1 btn">Previous</Button>
+                <Button variant="contained" size="small" color="warning" className="mx-1 btn" onClick={changeClearResponse}>Clear Response</Button>
+                <Button variant="contained" size="small" color="success" onClick={changeNextAndSaveQuestion} className="ms-auto mx-1 btn">Save & Next</Button>
+      </div>
+      </div>
+      <div className="row">
         <div className="col-md-9">
-          <Card style={{height:700+'px'}}>
+          <Card >
             {titleData[0][0]!=="$" ? <CardHeader title={(currentQuestionIndex+1)+". "+titleData[0]} /> : <CardHeader title={(currentQuestionIndex+1)+". Statements"} />}
             {titleData[0][0]==="$" && <div>
                 <ol>
@@ -183,7 +196,7 @@ function ExamPaper() {
             </div>}
             {currentQuestion.questionImage &&
             <div className='container text-center'>
-                  <img src={`data:image/png;base64,`+currentQuestion.questionImage.data}  alt='Question '/>
+                  <img className="img-fluid" src={`data:image/png;base64,`+currentQuestion.questionImage.data}  alt='Question '/>
                 </div> }
             { titleData[1] && <div>
               <CardHeader title="Conclusion" />
@@ -204,55 +217,50 @@ function ExamPaper() {
               className="ml-3"
             >
              <FormControlLabel className="my-3" value={currentQuestion.options.option1} control={<Radio />}
-              label={currentQuestion.options.optionsImage?<img src={`data:image/png;base64,`+currentQuestion.options.optionsImage.option1}  alt='Question '/>:currentQuestion.options.option1} />
+              label={currentQuestion.options.optionsImage?<img className="img-fluid" src={`data:image/png;base64,`+currentQuestion.options.optionsImage.option1}  alt='Question '/>:currentQuestion.options.option1} />
              <FormControlLabel className="my-3" value={currentQuestion.options.option2} control={<Radio />} 
-             label={currentQuestion.options.optionsImage?<img src={`data:image/png;base64,`+currentQuestion.options.optionsImage.option2}  alt='Question '/>:currentQuestion.options.option2} />
+             label={currentQuestion.options.optionsImage?<img className="img-fluid" src={`data:image/png;base64,`+currentQuestion.options.optionsImage.option2}  alt='Question '/>:currentQuestion.options.option2} />
              <FormControlLabel className="my-3" value={currentQuestion.options.option3} control={<Radio />} 
-             label={currentQuestion.options.optionsImage?<img src={`data:image/png;base64,`+currentQuestion.options.optionsImage.option3}  alt='Question '/>:currentQuestion.options.option3} />
+             label={currentQuestion.options.optionsImage?<img className="img-fluid" src={`data:image/png;base64,`+currentQuestion.options.optionsImage.option3}  alt='Question '/>:currentQuestion.options.option3} />
              <FormControlLabel className="my-3" value={currentQuestion.options.option4} control={<Radio />} 
-             label={currentQuestion.options.optionsImage?<img src={`data:image/png;base64,`+currentQuestion.options.optionsImage.option4}  alt='Question '/>:currentQuestion.options.option4} />
+             label={currentQuestion.options.optionsImage?<img className="img-fluid" src={`data:image/png;base64,`+currentQuestion.options.optionsImage.option4}  alt='Question '/>:currentQuestion.options.option4} />
             </RadioGroup>
             </div>
           </Card>
-
         </div>
         
-        <div className="col-md-3">
-          <Card>
+        <div className="col-md-3 my-2">
+          <Card className="container my-1">
             <CardHeader title="All Questions"/>
             <Divider />
-            <div className="container my-1">
-              <div className="row">
+              <div className="row mt-2">
               {questions.map((question,index)=>{
-                      return <div key={question.id} className="col-md-3 mx-1 my-1">
-                        <Button id={question.id} variant='contained' color={activeButton === index ? "secondary" : "success"}  className="visited" onClick={()=>chnageCurrentQuestion(question,index)}>{index+1}</Button>
+                      return <div key={question.id} className="col-3 col-md-3 mx-1  my-1">
+                        <Button id={question.id} variant='outlined' color={activeButton === index ? "secondary" : "success"}  className="visited" onClick={()=>chnageCurrentQuestion(question,index)}>{index+1}</Button>
                       </div>
                     })}                
               </div>
-              <div className="row">
+              <div className="row my-2">
                 <div className="col-md text-center">
                   <Button variant="outlined" color="success" onClick={handleTestSubmit}>Submit Test</Button>
                 </div>
               </div>
-            </div>
           </Card>
         </div>
       </div>
+      
     </div>
-    <div id="test-navigate-button" className="container">
+    {/* <div id="test-navigate-button" className="container">
         <div  className="row">
           <div className="col-md-9">
-            <Card>
-            <Divider />
               <div  className="d-flex my-2" >
-                <Button variant="contained" color="primary" onClick={changePreviousQuestion} className="mx-1">Previous</Button>
-                <Button variant="contained" color="warning" className="mx-1" onClick={changeClearResponse}>Clear Response</Button>
-                <Button variant="contained" color="success" onClick={changeNextAndSaveQuestion} className="ms-auto mx-1">Save & Next</Button>
+                <Button variant="contained" size="small" color="primary" onClick={changePreviousQuestion} className="mx-1 btn">Previous</Button>
+                <Button variant="contained" size="small" color="warning" className="mx-1 btn" onClick={changeClearResponse}>Clear Response</Button>
+                <Button variant="contained" size="small" color="success" onClick={changeNextAndSaveQuestion} className="ms-auto mx-1 btn">Save & Next</Button>
               </div>
-            </Card>
           </div>
         </div>
-    </div>
+    </div> */}
     </>
   )
 }

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import CategoryService from '../../../services/CategoryService';
-import { Card, CardContent, CardHeader,Button } from '@mui/material';
+import { Card, CardContent, CardHeader,Button, Divider } from '@mui/material';
 import { lightGreen ,yellow ,red, lightBlue, orange} from '@mui/material/colors';
 import { useNavigate } from 'react-router-dom';
 import ReadMore from '../../../utility/ReadMore';
+
 
 
 const categoryService =new CategoryService();
@@ -118,6 +119,10 @@ function ShowCategory() {
             {categories.map(category=>{
                 return <div key={category.cId} className='col-md-3 '>
                     <Card style={{backgroundColor:category.color}} className='mb-5'>
+                    {/* <div className='container text-end'>
+                    <DeleteOutlineOutlinedIcon />
+                    </div> */}
+                    
                     <CardContent>
                         <div className='container text-center '>
                             <div className='row'>
@@ -130,6 +135,7 @@ function ShowCategory() {
                                 </div>
                             </div>
                         </div>
+                        <Divider />
                     </CardContent>
                     </Card>
                 </div>

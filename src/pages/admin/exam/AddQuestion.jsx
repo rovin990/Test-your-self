@@ -267,11 +267,15 @@ function handleFileInput(event){
   }
 }
 
+function handleFileUpload(){
+  return ;
+}
+
 
   return (
     <div className='container'>
-        <div className='row'>
-            <div className='col-md-8 offset-md-2'>
+        <div className='row '>
+            <div className='col-md-8 col-sm my-3'>
             <Model color={color} responseMsg={responseMsg} isOpen={open} handleDialog={handleDialog}/>
                 <Card>
                     <CardHeader title="Add New Question" />
@@ -350,6 +354,20 @@ function handleFileInput(event){
                         </div>
                     </CardActions>
                 </Card>
+            </div>
+            <div className='col-md-4 col-sm'>
+              <Card className='mt-3'>
+                <CardHeader title="Upload question from file" />
+                <CardContent className='container text-center'>
+                  <TextField variant='outlined' margin='dense'type='file' />
+                </CardContent>  
+                <CardActions>
+                  <div className='container my-1 text-center'>
+                    <Button variant='contained' color='success' onClick={handleFileUpload} >Upload</Button>
+                  </div>
+                </CardActions>              
+              </Card>
+              
             </div>
         </div>
     </div>

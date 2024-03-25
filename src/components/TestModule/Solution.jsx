@@ -30,6 +30,7 @@ function Solution() {
   const allQuestionAnswer = new Map(questions.map(question=>[question.id,question.answer]));
   const loggedInUser=JSON.parse(globalService.getUserDetails());
   const [currentQuestion, setCurrentQuestion] = useState(questions[0]);
+  const [titleData,setTitleData] =useState(currentQuestion.title.split("#"));
   const [isViewSolution,setIsViewSolution] = useState(false);
 
   const [selectedValue,setSelectedValue] = useState('');
@@ -252,7 +253,7 @@ function Solution() {
   function chnageCurrentQuestion(clickedQuestion,index){
     lastVisitedQuestionId=currentQuestion.id;
     setCurrentQuestion(clickedQuestion)                 // set current question
-                           
+    setTitleData(clickedQuestion.title.split("#"))               
     currentQuestionIndex=index;                         //current question index
 
     resetAllValue()
@@ -269,6 +270,7 @@ function Solution() {
     }
     else if(currentQuestionIndex>0){
       setCurrentQuestion(questions[currentQuestionIndex-1])
+      setTitleData(questions[currentQuestionIndex-1].title.split("#"))
       currentQuestionIndex--;
     }
     
@@ -285,6 +287,7 @@ function Solution() {
     else{
       setCurrentQuestion(questions[currentQuestionIndex+1])
       console.log(questions[currentQuestionIndex+1])
+      setTitleData(questions[currentQuestionIndex+1].title.split("#"))
       currentQuestionIndex++;
     }
   }
@@ -322,33 +325,63 @@ function Solution() {
           
         </div>
         <div className='col-md-3 my-2'>
-          <Card>
           <Button variant='outlined' color='primary' className='mx-1' onClick={handleOnClickForScore}>Score-Dashboard</Button>
-          <Divider/>
-
-          </Card>
-          
+         
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-md-9 d-flex my-2">
+          <Button variant="contained" size="small" color="primary" onClick={changePreviousQuestion} className="mx-1 btn">Previous</Button>
+          {/* <Button variant="contained" size="small" color="warning" className="mx-1 btn" onClick={changeClearResponse}>Clear Response</Button> */}
+          <Button variant="contained" size="small" color="success" onClick={changeNextAndSaveQuestion} className="ms-auto mx-1 btn">Next</Button>
         </div>
       </div>
       <div className="row">
         <div className="col-md-9">
-          <Card style={{height:700+'px'}}>
-            <CardHeader title={(currentQuestionIndex+1)+". "+currentQuestion.title} />
+          <Card >
+          {titleData[0][0]!=="$" ? <CardHeader title={(currentQuestionIndex+1)+". "+titleData[0]} /> : <CardHeader title={(currentQuestionIndex+1)+". Statements"} />}
+          {titleData[0][0]==="$" && <div>
+                <ol>
+                 {titleData[0].split("$")[0] && <li>{titleData[0].split("$")[0]}</li> }
+                 {titleData[0].split("$")[1] && <li>{titleData[0].split("$")[1]}</li> }
+                 {titleData[0].split("$")[2] && <li>{titleData[0].split("$")[2]}</li> }
+                </ol>
+            </div>}
+          {currentQuestion.questionImage &&
+            <div className='container text-center'>
+                  <img className="img-fluid" src={`data:image/png;base64,`+currentQuestion.questionImage.data}  alt='Question '/>
+            </div> }
+          { titleData[1] && <div>
+            <CardHeader title="Conclusion" />
+              <ol>
+               {titleData[1] && <li>{titleData[1]}</li> }
+               {titleData[2] && <li>{titleData[2]}</li> }
+               {titleData[3] && <li>{titleData[3]}</li> }
+              </ol>
+            </div> }
             <Divider/>
             <div className="mx-3 my-3">
             {!isViewSolution ?              
               <div>
-              <div><Radio id='a' checked={selectedValue === currentQuestion.options.option1 } onChange={handleRadioChange} value={currentQuestion.options.option1} name="options" inputProps={{ 'aria-label': 'A' }} /><span>{currentQuestion.options.option1}</span></div>
-              <div><Radio id='b' checked={selectedValue === currentQuestion.options.option2 } onChange={handleRadioChange} value={currentQuestion.options.option2} name="options" inputProps={{ 'aria-label': 'A' }} /><span>{currentQuestion.options.option2}</span></div>
-              <div><Radio id='c' checked={selectedValue === currentQuestion.options.option3 } onChange={handleRadioChange} value={currentQuestion.options.option3} name="options" inputProps={{ 'aria-label': 'A' }} /><span>{currentQuestion.options.option3}</span></div>
-              <div><Radio id='d' checked={selectedValue === currentQuestion.options.option4 } onChange={handleRadioChange} value={currentQuestion.options.option4} name="options" inputProps={{ 'aria-label': 'A' }} /><span>{currentQuestion.options.option4}</span></div>
+              <div className="my-3"><Radio id='a' checked={selectedValue === currentQuestion.options.option1 } onChange={handleRadioChange} value={currentQuestion.options.option1} name="options" inputProps={{ 'aria-label': 'A' }} />
+              {currentQuestion.options.optionsImage?<img className="img-fluid" src={`data:image/png;base64,`+currentQuestion.options.optionsImage.option1}  alt='Question '/>:currentQuestion.options.option1}</div>
+              <div className="my-3"><Radio id='b' checked={selectedValue === currentQuestion.options.option2 } onChange={handleRadioChange} value={currentQuestion.options.option2} name="options" inputProps={{ 'aria-label': 'A' }} />
+              {currentQuestion.options.optionsImage?<img className="img-fluid" src={`data:image/png;base64,`+currentQuestion.options.optionsImage.option2}  alt='Question '/>:currentQuestion.options.option2}</div>
+              <div className="my-3"><Radio id='c' checked={selectedValue === currentQuestion.options.option3 } onChange={handleRadioChange} value={currentQuestion.options.option3} name="options" inputProps={{ 'aria-label': 'A' }} />
+              {currentQuestion.options.optionsImage?<img className="img-fluid" src={`data:image/png;base64,`+currentQuestion.options.optionsImage.option3}  alt='Question '/>:currentQuestion.options.option3}</div>
+              <div className="my-3"><Radio id='d' checked={selectedValue === currentQuestion.options.option4 } onChange={handleRadioChange} value={currentQuestion.options.option4} name="options" inputProps={{ 'aria-label': 'A' }} />
+              {currentQuestion.options.optionsImage?<img className="img-fluid" src={`data:image/png;base64,`+currentQuestion.options.optionsImage.option4}  alt='Question '/>:currentQuestion.options.option4}</div>
               </div>
               :
               <div className='d-flex flex-column justify-content-evenly'>
-                <div id='a' className={is1Correct?'correct':(opetion1Choosen?'wrong':'')}><p><span>{(is1Correct?<CheckIcon />:opetion1Choosen?<CloseIcon  />:'')}</span>{currentQuestion.options.option1}</p></div>
-                <div id='b' className={is2Correct?'correct':(opetion2Choosen?'wrong':'')}><p><span>{(is2Correct?<CheckIcon />:opetion2Choosen?<CloseIcon  />:'')}</span>{currentQuestion.options.option2}</p></div>
-                <div id='c' className={is3Correct?'correct':(opetion3Choosen?'wrong':'')}><p><span>{(is3Correct?<CheckIcon />:opetion3Choosen?<CloseIcon  />:'')}</span>{currentQuestion.options.option3}</p></div>
-                <div id='d' className={is4Correct?'correct':(opetion4Choosen?'wrong':'')}><p><span>{(is4Correct?<CheckIcon />:opetion4Choosen?<CloseIcon  />:'')}</span>{currentQuestion.options.option4}</p></div>
+                <div id='a' className={is1Correct?'correct my-3':(opetion1Choosen?'wrong my-3':'my-3')}><p><span>{(is1Correct?<CheckIcon />:opetion1Choosen?<CloseIcon  />:'')}</span>
+                {currentQuestion.options.optionsImage?<img className="img-fluid mt-2" src={`data:image/png;base64,`+currentQuestion.options.optionsImage.option1}  alt='Question '/>:currentQuestion.options.option1}</p></div>
+                <div id='b' className={is2Correct?'correct my-3':(opetion2Choosen?'wrong my-3':'my-3')}><p><span>{(is2Correct?<CheckIcon />:opetion2Choosen?<CloseIcon  />:'')}</span>
+                {currentQuestion.options.optionsImage?<img className="img-fluid mt-2" src={`data:image/png;base64,`+currentQuestion.options.optionsImage.option2}  alt='Question '/>:currentQuestion.options.option2}</p></div>
+                <div id='c' className={is3Correct?'correct my-3':(opetion3Choosen?'wrong my-3':'my-3')}><p><span>{(is3Correct?<CheckIcon />:opetion3Choosen?<CloseIcon  />:'')}</span>
+                {currentQuestion.options.optionsImage?<img className="img-fluid mt-2" src={`data:image/png;base64,`+currentQuestion.options.optionsImage.option3}  alt='Question '/>:currentQuestion.options.option3}</p></div>
+                <div id='d' className={is4Correct?'correct my-3':(opetion4Choosen?'wrong my-3':'my-3')}><p><span>{(is4Correct?<CheckIcon />:opetion4Choosen?<CloseIcon  />:'')}</span>
+                {currentQuestion.options.optionsImage?<img className="img-fluid mt-2" src={`data:image/png;base64,`+currentQuestion.options.optionsImage.option4}  alt='Question '/>:currentQuestion.options.option4}</p></div>
               </div>
             }
             </div>
@@ -369,14 +402,14 @@ function Solution() {
 
         </div>
         
-        <div className="col-md-3">
-          <Card>
+        <div className="col-md-3 my-2">
+          <Card className="container my-1">
             <CardHeader title="All Questions"/>
             <Divider />
             <div className="container my-1">
               <div className="row">
               {questions.map((question,index)=>{
-                      return <div key={question.id} className="col-md-3 mx-1 my-1">
+                      return <div key={question.id} className="col-3 col-md-3 mx-1 my-1">
                         <Button id={question.id} variant='contained' style={{backgroundColor:responseData.get(question.id)!==undefined?red.A200:green[800]}}   onClick={()=>chnageCurrentQuestion(question,index)}>{index+1}</Button>
                       </div>
                     })}                
@@ -386,7 +419,7 @@ function Solution() {
         </div>
       </div>
     </div>
-    <div id="test-navigate-button" className="container">
+    {/* <div id="test-navigate-button" className="container">
         <div  className="row">
           <div className="col-md-9">
             <Card>
@@ -399,7 +432,7 @@ function Solution() {
             </Card>
           </div>
         </div>
-    </div>
+    </div> */}
     </>
   )
 }
