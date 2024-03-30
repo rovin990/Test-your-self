@@ -266,8 +266,26 @@ function handleFileInput(event){
     default : break;
   }
 }
-
+const [questionFile,setQuestionFile]=useState(null);
+function captureFile(event){
+  const value=event.target.files[0];
+  setQuestionFile(value);
+}
 function handleFileUpload(){
+  
+  const formData = new FormData();
+  formData.append("question_exl",questionFile)
+  questionServiceObj.uploadQuestionFile(formData).then(response=>{
+    console.log("file uplaod response ",response)
+    setResponseMsg("all question saved")
+    setOpen(true)
+    setColor("success")
+  }).catch(error=>{
+    console.log(error)
+    // setResponseMsg(error.data.massage)
+    // setOpen(true)
+    // setColor("warning")
+  })
   return ;
 }
 
@@ -359,7 +377,7 @@ function handleFileUpload(){
               <Card className='mt-3'>
                 <CardHeader title="Upload question from file" />
                 <CardContent className='container text-center'>
-                  <TextField variant='outlined' margin='dense'type='file' />
+                  <TextField variant='outlined' margin='dense'type='file' onChange={captureFile}/>
                 </CardContent>  
                 <CardActions>
                   <div className='container my-1 text-center'>

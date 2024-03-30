@@ -28,6 +28,10 @@ class QuestionService{
     async getQuestionsByQuizIdWithAnswer(quizId){
         return await axios.get(ENVConstant.BASE_URL+"/question/quiz/"+quizId,{withCredentials:true})
     }
+
+    async uploadQuestionFile(formData){
+        return await axios.post(ENVConstant.BASE_URL+"/question/import",formData,{withCredentials:true})
+    }
     
 }
 

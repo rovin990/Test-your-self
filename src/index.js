@@ -12,6 +12,7 @@ import APPConstant from './constants/APPConstant';
 // request interceptors
 axios.interceptors.request.use((request)=>{
     let csrf = sessionStorage.getItem("XSRF-TOKEN");
+    console.log("csrf token ",csrf)
     if(csrf){
       request.headers['X-XSRF-TOKEN']=csrf;
     }
@@ -21,15 +22,16 @@ axios.interceptors.request.use((request)=>{
     let authorization = sessionStorage.getItem("Authorization");
     if(authorization!==null){
       request.headers['Authorization']=authorization;
-       console.log("authorization header after successfull login ",request.headers.get('Authorization'))
+       //console.log("authorization header after successfull login ",request.headers.get('Authorization'))
     }
-    
+    console.log(request)
     return request;
 },
 error => {
    return  Promise.reject(error)
   })
 
+//reponse interceptor
 axios.interceptors.response.use((response)=>{
   console.log(response)
   
