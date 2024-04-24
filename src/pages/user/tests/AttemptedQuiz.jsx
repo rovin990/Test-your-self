@@ -34,7 +34,7 @@ function AttemptedQuiz() {
                           <Button className='mx-1'>Attempt :{quizResponse.attemptNo}</Button>
                           <Button className='mx-1'>correct :{quizResponse.correctQuestion+'/'+(quizResponse.attemptedQuestion+quizResponse.notAttemptedQuestion)}</Button>
                           <Button variant='outlined' color='primary' className='mx-1' onClick={()=>handleReAttempt(quizResponse.quizId)}>Re-Attempt</Button>
-                          <Link to={`/quiz/solution/`+quizResponse.quizId} state={quizResponse.responses} ><Button variant='outlined' color='primary' className='mx-1'>Solution</Button> </Link>
+                          <Link to={`/quiz/solution/`+quizResponse.quizId+"/"+quizResponse.attemptNo} state={quizResponse.responses} ><Button variant='outlined' color='primary' className='mx-1'>Solution</Button> </Link>
                         </CardContent>
                       </Card>
                   </div>

@@ -1,7 +1,6 @@
 import React ,{useState }from 'react'
 import { Form } from 'react-router-dom'
 
-import Cookies from 'js-cookie';
 import {useNavigate} from "react-router-dom"
 
 
@@ -9,6 +8,8 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+
+import Swal from "sweetalert2"
 
 import UserService from '../services/UserService'
 import Navbar from '../components/Navbar';
@@ -37,11 +38,25 @@ function SignIn() {
     }
 
     const loginUser=()=>{
+       // console.log(userData)
         userserviceObj.loginUser(userData).then(response=>{  
-            if(response.status==200){
+            if(response.status===200){
                 window.sessionStorage.setItem("Authorization",response.headers.get("Authorization"));
-                let xsrf= Cookies.get("XSRF-TOKEN");
-                window.sessionStorage.setItem("XSRF-TOKEN",xsrf)
+                console.log("response.headers",response.headers)
+                // const csrfToken = document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1');
+                // console.log(csrfToken)
+                // let xsrf= Cookies.get("XSRF-TOKEN");
+                // console.log("xsrf token from cookies",xsrf)
+                // if(xsrf===undefined ||xsrf===null){
+                //     xsrf= response.headers.get("x-xsrf-token");
+
+                // //    let temp= window.atob(xsrf)
+                //     console.log("temp decoded csrf",response.headers)
+                //     console.log("xsrf token from header",xsrf)
+                // }
+                // console.log("xsrf token after login",xsrf)
+                // window.document.cookie="XSRF-TOKEN="+xsrf;
+                // window.sessionStorage.setItem("XSRF-TOKEN",xsrf)
 
                 window.sessionStorage.setItem("auth",true)
 
@@ -61,7 +76,18 @@ function SignIn() {
             
         })
         .catch(reject=>{
-            console.log(reject)
+            const tempRes=reject.response;
+            const tempData=tempRes.data;
+            Swal.fire({
+                title:'Error',
+                text:tempData.detail,
+                icon:"error",          
+                showConfirmButton:true,
+                confirmButtonText:"Ok",        
+              }
+              )
+
+           return;
         })
         
     }
@@ -86,7 +112,7 @@ function SignIn() {
                     <Card>
                         <CardContent>
                             <div className='container text-center'>
-                                    <img src={ process.env.PUBLIC_URL +'/images/kick1.jpg'} alt='logo.png' style={logoCss}/>
+                                    <img src={ process.env.PUBLIC_URL +'/images/logo.png'} alt='logo.png' style={logoCss}/>
                             </div>
                             <h1 className='text-center'>SignIn</h1>
                             <Form>

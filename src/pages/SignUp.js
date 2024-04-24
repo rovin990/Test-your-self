@@ -92,14 +92,15 @@ function SignUp() {
     }
 
    function validatUserInfo(){
-        const usernameRegEx=new RegExp("^[0-9A-Za-z]{6,10}$")
+        const usernameRegEx=new RegExp("^[0-9A-Za-z]{6,16}$")
         const passwordRegEx=new RegExp("^(?=.*?[0-9])(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[^0-9A-Za-z]).{8,32}$");
-        const nameRegEx=new RegExp("^[A-Za-z]{3,}$");
+        const nameRegEx=new RegExp("^[0-9A-Za-z]{3,}$");
         const phoneRegEx=new RegExp("^[6-9]\d{9}$");
         const emailRegEx=new RegExp("^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$");
 
         let isFine = true;
         // if(userData===undefined || userData ==null)return;
+        console.log("usernameRegEx.test(userData.username)",usernameRegEx.test(userData.username))
         if(userData.username.trim()==='' || userData.username==null || !usernameRegEx.test(userData.username)){
             setUnErr(true)
             isFine=false
@@ -182,7 +183,7 @@ function SignUp() {
                     <Card>
                         <CardContent>
                             <div className='container text-center'>
-                                <img src={ process.env.PUBLIC_URL +'/images/kick1.jpg'} alt='logo.png' style={logoCss}/>
+                                <img src={ process.env.PUBLIC_URL +'/images/logo.png'} alt='logo.png' style={logoCss}/>
                             </div>
                             <h1 className='text-center'>SignUp</h1>
                             <Form >
@@ -255,6 +256,7 @@ function SignUp() {
                                 <ol>
                                     <li>Must be numerical</li>
                                     <li>Must be length of 10</li>
+                                    <li>Must be start with [6,7,8,9]</li>
                                 </ol>
                             </li>
                         </ol>

@@ -46,7 +46,7 @@ function UserDashboard() {
                             <nav aria-label="main mailbox folders">
                                 <List>
                                     <ListItemLink to="/category/All" primary="All-quizzes" icon={<HomeIcon />} />
-                                    {categories.map(category=><ListItemLink to={`/category/`+category.title} primary={category.title} icon={<InboxIcon />} />)}
+                                    {categories.map(category=><ListItemLink key={category.cid} to={`/category/`+category.title} primary={category.title} icon={<InboxIcon />} />)}
                                     
                                 </List>
                                 <Divider />

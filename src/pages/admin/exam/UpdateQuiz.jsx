@@ -24,22 +24,12 @@ function UpdateQuiz() {
 
     const cData = useLoaderData()
     console.log(cData)
-    const [categories,setCategories]= useState(cData);
+    const [categories]= useState(cData);
 
 
     const [open,setOpen] = useState(false);
     const [responseMsg,setResponseMsg]=useState("");
     const [color,setColor] = useState("");
-
-
-    // useEffect(()=>{
-    //     categoryService.getCategories().then((response)=>{
-    //         setCategories(response.data)
-    //     })
-    //     .catch(error=>{
-    //         console.log("error ",error);
-    //     })
-    // },[])
 
   function  handleUserInput(event){
         const name= event.target.name;

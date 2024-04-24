@@ -37,7 +37,6 @@ class QuizService{
         let temp=[];
         for (const [key, value] of responseData) { 
             temp=[...temp,{"questionId":key,"answer":value}]
-            
         }
         console.log(temp)
             const data ={
@@ -47,6 +46,10 @@ class QuizService{
         }
         
         return await axios.post(ENVConstant.BASE_URL+"/test-response",data,{withCredentials:true})
+    }
+
+    async getRankerByQuizId(quizId,attemptNo){
+        return axios.get(ENVConstant.BASE_URL+"/test-response/rankers?quizId="+quizId+"&attemptNo="+attemptNo,{withCredentials:true})
     }
 }
 

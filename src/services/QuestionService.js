@@ -11,7 +11,7 @@ class QuestionService{
         return await axios.post(ENVConstant.BASE_URL+"/question",formData,{withCredentials:true })
     }
     async createQuestionWithOutImages(formData){
-        return await axios.put(ENVConstant.BASE_URL+"/question",formData,{withCredentials:true })
+        return await axios.post(ENVConstant.BASE_URL+"/question/withoutimage",formData,{withCredentials:true })
     }
 
     async updateQuestion(question){

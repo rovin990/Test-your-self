@@ -11,15 +11,14 @@ class CategoryService{
 
     async saveCategory(category){
 
-        
+        // console.log(category)
+        // for (var key of category.entries()) {
+        //         console.log(key[0] + ', ' + key[1]);
+        //     }
         return axios.post(ENVConstant.BASE_URL+"/category",category,{withCredentials:true})
     }
 
     async saveFile(formData){
-
-        // for (var key of formData.entries()) {
-        //     console.log(key[0] + ', ' + key[1]);
-        // }
         return await axios.post(ENVConstant.BASE_URL+"/image/category",formData,{withCredentials:true,headers:{"Content-Type":"multipart/form-data"}})
     }
 }

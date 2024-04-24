@@ -47,12 +47,8 @@ function Timer({examTimeInMins,width,actionOnTimeEnd}) {
 
     
   return (
-    <div className='card' style={{width:width+'px',marginTop:4+'%'}}>
-        <div className='card-body '>
-            <div className='d-flex justify-content-center'>
-                <p> {hour<10?"0"+hour:hour} : {minutes<10?"0"+minutes:minutes} : {second<10?"0"+second:second}</p>
-            </div>
-        </div>
+    <div className='d-flex justify-content-center'>
+         <span>Time Left :<p> {hour<10?"0"+hour:hour} : {minutes<10?"0"+minutes:minutes} : {second<10?"0"+second:second}</p></span> 
     </div>
   )
 }

@@ -8,6 +8,10 @@ import Chip from '@mui/material/Chip';
 import Paper from '@mui/material/Paper';
 import TagFacesIcon from '@mui/icons-material/TagFaces';
 
+
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+
 import QuizService from '../../../services/QuizService';
 import QuestionService from '../../../services/QuestionService';
 import Model from '../../../utility/Model';
@@ -29,11 +33,23 @@ const chipBoxCss={
   m: 0,
 }
 
+
+const modules = {
+  toolbar: [
+    ['code'],
+    ['clean']
+  ]
+}
+
 function AddQuestion() {
+
+  const [code,setCode] =useState('')
+
   const [examTagsChip, setExamTagsChip]=useState([]);
   // const [quizChip, setQuizChip]=useState([]);
   const [question,setQuestion]=useState({
     title:"",
+    "code":"",
     explanation:"",
     answer:"",
     questionType:"",
@@ -61,6 +77,10 @@ const [tagMErr ,setTagMErr]= useState(false)
 const [topicErr ,setTopicErr]= useState(false)
 const [subjectErr ,setSubjectErr]= useState(false)
 const [answerErr,setAnswerErr]=useState(false)
+
+const [hasCode,setHasCode]=useState(false);
+
+const [checked, setChecked] = useState(false);
 
 const [open,setOpen] = useState(false);
 const [responseMsg,setResponseMsg]=useState("");
@@ -127,7 +147,7 @@ function  handleUserInput(event){
     }
   } 
   
-  console.log(question)
+  // console.log(question)
 }
 
 const handleSubmit=()=>{
@@ -176,8 +196,15 @@ const handleSubmit=()=>{
 
   if(!isFine)return ;
   const formData = new FormData();
+  if(hasCode){
+    question.code=code;
+  }
+
+  console.log(question)
   formData.append("question",JSON.stringify(question))
   let formImages=[];
+
+  
   if(titleImg){
     formImages.push(titleImg)
     
@@ -192,6 +219,7 @@ const handleSubmit=()=>{
   for (const image of formImages) {
     formData.append("formImages", image);
   }
+
 
   if(formImages.length!==0){
     questionServiceObj.createQuestion(formData).then(response=>{
@@ -219,9 +247,12 @@ const handleSubmit=()=>{
       }
     })
     .catch(error=>{
+      // console.log(error);
+      
         setResponseMsg(error.data.massage)
         setOpen(true)
         setColor("warning")
+        return;
     })
   }
 }
@@ -230,7 +261,7 @@ const tagChipDelete = (chipToDelete) => () => {
   setExamTagsChip((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
 };
 
-const [checked, setChecked] = useState(false);
+
 
 const handleSwitchAction = (event) => {
         setChecked(event.target.checked);
@@ -282,12 +313,15 @@ function handleFileUpload(){
     setColor("success")
   }).catch(error=>{
     console.log(error)
-    // setResponseMsg(error.data.massage)
-    // setOpen(true)
-    // setColor("warning")
+    setResponseMsg(error.data.massage)
+    setOpen(true)
+    setColor("warning")
   })
   return ;
 }
+
+
+
 
 
   return (
@@ -299,7 +333,21 @@ function handleFileUpload(){
                     <CardHeader title="Add New Question" />
                     <CardContent >
                       <Form>
+
+                          
                         <TextField error={titleErr}  fullWidth id="title" size="small" label="title" variant="outlined" margin="dense" onChange={handleUserInput} name='title' value={question.title}/>
+                        <Switch checked={hasCode} onChange={(event)=>setHasCode(event.target.checked)} inputProps={{"area-label":"controlled"}} />
+                       {hasCode &&
+                        <ReactQuill 
+                            theme="snow"
+                            onChange={setCode}
+                            value={code}
+                            modules={modules}
+                            bounds={'.app'}
+                            placeholder='Start typing....'
+                          />
+                       }
+
                         <TextField error={op1Err} type='file' fullWidth id="image" size="small"   margin="dense" onChange={handleFileInput} name='image'  />
                         <TextField error={explainErr} fullWidth id="explanation" size="small" label="explanation" variant="outlined" multiline rows={4}
                          margin="dense" onChange={handleUserInput} name='explanation' value={question.explanation} />
@@ -385,6 +433,11 @@ function handleFileUpload(){
                   </div>
                 </CardActions>              
               </Card>
+              
+              {/* <div>{questionTitle}</div>
+
+              <div dangerouslySetInnerHTML={{__html: questionTitle}}>
+              </div> */}
               
             </div>
         </div>

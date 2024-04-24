@@ -1,4 +1,4 @@
-import { Avatar, Button, Card, CardContent, CardHeader} from '@mui/material';
+import { Avatar,Card, CardContent, CardHeader} from '@mui/material';
 import { blue,green,indigo,orange, red } from '@mui/material/colors';
 import React, { useEffect, useState } from 'react'
 import { Link, useParams} from 'react-router-dom'
@@ -20,7 +20,7 @@ const quizCss={
 function ShowQuizzes() {
     const [quizess,setQuizzes] = useState([]);
     const routeParams = useParams();
-    console.log(routeParams.category)
+    // console.log(routeParams.category)
     useEffect(()=>{
         loadQuiz()
     },[routeParams])
@@ -46,7 +46,7 @@ function ShowQuizzes() {
         <div className='row '>
             <h3>{"Available "+routeParams.category+ " Quiz"}</h3>
             {quizess.map(quiz=>{
-                return <div className='col-md-4'>
+                return <div key={quiz.qId} className='col-md-4'>
                     <Card className='mb-3'>
                     <CardHeader avatar={<Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
                     <img src={ process.env.PUBLIC_URL +'/images/category/quiz.png'} alt='quiz.png' style={quizCss}/></Avatar> }
@@ -57,7 +57,7 @@ function ShowQuizzes() {
                         <ReadMore text={quiz.description} displayCount='30'/>
                     </CardContent>
                     <div className='container pb-2' style={{margin:0}}>
-                        <Link to="/quiz/view" state={quiz} className='mx-1 ' style={{textDecoration:'none',color:blue[900]}} target='_blank'>View</Link>
+                        <Link to="/quiz/view" state={quiz} className='mx-1 ' style={{textDecoration:'none',color:blue[900]}} >View</Link>
                         <Link to="/quiz/quiz-instruction" state={quiz} className='mx-1 ' style={{textDecoration:'none',color:orange[900]}}>Start</Link>
                         <Link className='mx-1' style={{textDecoration:'none',color:green[900]}} >Marks:{quiz.maxMark}</Link>
                         <Link className='mx-1' style={{textDecoration:'none',color:indigo[900]}} >Questions:{quiz.noOfQuestion}</Link>

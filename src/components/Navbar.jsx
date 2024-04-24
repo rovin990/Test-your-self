@@ -6,8 +6,8 @@ import Link from '@mui/material/Link';
 
 
 const logoCss={
-    width:'20px',
-    height:'20px',
+    width:'30px',
+    height:'30px',
     border: '1px dashed red',
     borderRadius: '100%',
 }
@@ -23,14 +23,14 @@ export default function Navbar() {
     else{
       setIsLoggedIn(false)
     }
-  })
+  },[])
   return (
-      <AppBar color='success' >
+      <AppBar color='info' >
         <Toolbar>
-        <img src={ process.env.PUBLIC_URL +'/images/kick1.jpg'} alt='logo.png' style={logoCss}/>
+        <img src={ process.env.PUBLIC_URL +'/images/logo.png'} alt='logo.png' style={logoCss}/>
 
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Examportal
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1}}>
+            ExamSphere
           </Typography>
 
          { !isLoggedIn && <Link href="/signup" underline="none" color="inherit">SignUp</Link> }

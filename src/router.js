@@ -167,11 +167,11 @@ const router = createBrowserRouter([
       }
     },
     {
-      path:"quiz/quiz-report",
+      path:"quiz/quiz-report/:attemptNo",
       element:<GaurdRoute Component={ ScoreDashboard }/>
     },
     {
-      path:"quiz/solution/:quizId",
+      path:"quiz/solution/:quizId/:attemptNo",
       element:<GaurdRoute Component={ Solution } />,
       loader:async ({params})=>{
         const questions= await questionService.getQuestionsByQuizIdWithAnswer(params.quizId);

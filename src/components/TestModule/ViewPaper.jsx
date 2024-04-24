@@ -13,14 +13,9 @@ const _globalService = new GlobalService();
 function ViewPaper() {
     const location = useLocation();
     const quiz= location.state;
+    console.log(quiz)
     const [allQuestion,setAllQuestion] = useState([])
     const loggedInUser=JSON.parse(_globalService.getUserDetails()); // loggedInUser details
-
-//     const [state, setState] = useState<{email: null | string, password: null | string}>({ email: null, password: null });
-
-//   function setEmail(email: string) {
-//     setState(prevState => ({ ...prevState, email }))
-//   }
 
     useEffect(()=>{
         _questionService.getQuestionsByQuizId(quiz.qid).then(response=>{

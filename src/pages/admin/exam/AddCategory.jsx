@@ -14,7 +14,7 @@ const logoCss={
     borderRadius: '100%',
 }
 function AddCategory() {
-    const [category,setCategory] =useState({title:"",color:"",description:"",image:""});
+    const [category,setCategory] =useState({title:"",color:"#f9f5f5",description:"",image:""});
     const [file,setFile]=useState(null);
     const [preview,setPreview]=useState(null)
 
@@ -32,7 +32,7 @@ function AddCategory() {
     const handleUserInput = (event)=>{
         const name=event.target.name;
         const value=event.target.value;
-        if(name=="title"){
+        if(name==="title"){
             setError(false)
         }
         setCategory(pre=>{
@@ -42,44 +42,28 @@ function AddCategory() {
 
     const handleFileInput=(event)=>{
         const value=event.target.files[0];
-
-        setFile(value);
-        const name="image";
-        setCategory(pre=>{
-            return {...pre,[name]:value.name}
-        }) 
-       
-        
+        setFile(value);     
+        console.log("category Image",value)
         setPreview(URL.createObjectURL(value));
     }
 
     const saveCategory= ()=>{
-        if(category.title==''|| category.title.trim()==null){
+        if(category.title===''|| category.title.trim()==null){
             setError(true)
             return;
         }
-        //save category
-        catService.saveCategory(category).then(response=>{
-            console.log(response)
-            if(response.status==201){
-                const formData = new FormData();
-                formData.append("file",file)
-                catService.saveFile(formData).then(res=>{
-                    console.log(res)
-                    setResponseMsg("Category is saved with Cid "+response.data.cid)
-                    setColor('success')
-                    setOpen(true)
-                })
-                .catch(error=>{
-                    console.log(error)
-                    setResponseMsg("Something went wrong try againg")
-                    setColor('warning')
-                    setOpen(true)
-                })
-            }
 
-        })
-        .catch(error=>{
+        const formData = new FormData();
+        formData.append("category",JSON.stringify(category))
+        formData.append("categoryImage",file);
+
+        //save category
+        catService.saveCategory(formData).then(response=>{
+            console.log(response);
+            setResponseMsg("Category saved with cId "+response.data.cid)
+            setColor('success')
+            setOpen(true)
+        }).catch(error=>{
             console.log(error)
             setResponseMsg("Something went wrong try againg")
             setColor('warning')
@@ -96,7 +80,7 @@ function AddCategory() {
                 <CardHeader title="New category" subheader="Please provide valid data"/>
                 <Form>
                     <TextField error={error} fullWidth id="title" size="small" label="title" variant="outlined" margin="dense" onChange={handleUserInput} name='title' value={category.title}/>
-                    <TextField fullWidth id="color" size='small' label="choose color" margin='dense' onChange={handleUserInput} name="color" value={category.color} type='color' />
+                    {/* <TextField fullWidth id="color" size='small' label="choose color" margin='dense' onChange={handleUserInput} name="color" value={category.color} type='color' /> */}
                     <TextField fullWidth id="image" size='small'  margin='dense' onChange={handleFileInput} name="file"  type='file' />
                     <TextField fullWidth id="description"  label="description" variant="outlined" margin="dense" multiline name='description'
                                  rows={4} onChange={handleUserInput}  value={category.description} />    
@@ -108,7 +92,7 @@ function AddCategory() {
             <div className='col-md-3 col-sm my-4 d-flex justify-content-center'>
                 <div className="align-self-center">
                     <label >Image Preview</label>
-                    <img  src={preview} style={logoCss}/>
+                    <img  src={preview} style={logoCss} className='img-responsive'/>
                 </div>
                 
              </div>

@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
-import {  useLoaderData, useLocation, useNavigate } from 'react-router-dom';
+import {  useLoaderData, useLocation, useNavigate, useParams } from 'react-router-dom';
+
+import Swal from "sweetalert2"
 
 
 import GlobalService from "../../services/GlobalService";
 import UserQuizService from '../../services/UserQuizService';
 
-import { green, red } from '@mui/material/colors';
 import Navbar from '../Navbar';
 import {  Button, Card, CardContent, CardHeader, Divider, Radio } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -22,10 +23,13 @@ let lastVisitedQuestionId=0;
 
 
 function Solution() {
+  const params=useParams();
+  // console.log(params)
   const navigate= useNavigate();
   const location = useLocation();
   const responseData=new Map(location.state.map(obj => [obj.questionId, {answer:obj.answer,correctAnswer:obj.correctAnswer}]));
   
+  const [activeButton, setActiveButton] = useState(0);
   const [questions,quiz]=useLoaderData();
   const allQuestionAnswer = new Map(questions.map(question=>[question.id,question.answer]));
   const loggedInUser=JSON.parse(globalService.getUserDetails());
@@ -250,12 +254,12 @@ function Solution() {
     setIsViewSolution(false)
 
   }
-  function chnageCurrentQuestion(clickedQuestion,index){
+  function changeCurrentQuestion(clickedQuestion,index){
     lastVisitedQuestionId=currentQuestion.id;
     setCurrentQuestion(clickedQuestion)                 // set current question
     setTitleData(clickedQuestion.title.split("#"))               
     currentQuestionIndex=index;                         //current question index
-
+    setActiveButton(index)
     resetAllValue()
 
   }
@@ -273,6 +277,8 @@ function Solution() {
       setTitleData(questions[currentQuestionIndex-1].title.split("#"))
       currentQuestionIndex--;
     }
+
+    setActiveButton(currentQuestionIndex)
     
   }
 
@@ -281,7 +287,18 @@ function Solution() {
     lastVisitedQuestionId=questions[currentQuestionIndex].id;
     
     if(currentQuestionIndex===questions.length-1){
-      // console.log("full ",questions[currentIndex])
+      const SweetAlertResult= Swal.fire({
+        title:'info',
+        text:"You have reached last question . do you want to got first question ?",
+        icon:"info",          
+        showDenyButton:true,
+        denyButtonColor:'#ed6c02',
+        showConfirmButton:true,
+        confirmButtonText:"Yes",
+        confirmButtonColor:"#0288d1"
+
+      }
+      )
       return;
     }
     else{
@@ -290,6 +307,7 @@ function Solution() {
       setTitleData(questions[currentQuestionIndex+1].title.split("#"))
       currentQuestionIndex++;
     }
+    setActiveButton(currentQuestionIndex)
   }
 
 
@@ -299,9 +317,13 @@ function Solution() {
 
 
   function handleOnClickForScore(){
-    userQuizService.getQuizResponseByQuizId(quiz.qid).then(res=>{
+    console.log("hi")
+    userQuizService.getQuizResponseByQuizIdAndAttempNo(quiz.qid,params.attemptNo).then(res=>{
       console.log(res)
-      navigate("/quiz/quiz-report",{state:res.data})
+      let n=res.data.length;
+      console.log(n)
+      const stateData=res.data[n-1];
+      navigate("/quiz/quiz-report/"+params.attemptNo,{state:stateData})
     }).catch(error=>{
       console.log("error",error)
     })
@@ -332,7 +354,6 @@ function Solution() {
       <div className="row">
         <div className="col-md-9 d-flex my-2">
           <Button variant="contained" size="small" color="primary" onClick={changePreviousQuestion} className="mx-1 btn">Previous</Button>
-          {/* <Button variant="contained" size="small" color="warning" className="mx-1 btn" onClick={changeClearResponse}>Clear Response</Button> */}
           <Button variant="contained" size="small" color="success" onClick={changeNextAndSaveQuestion} className="ms-auto mx-1 btn">Next</Button>
         </div>
       </div>
@@ -359,6 +380,7 @@ function Solution() {
                {titleData[3] && <li>{titleData[3]}</li> }
               </ol>
             </div> }
+            <div className='container text-start' dangerouslySetInnerHTML={{__html:currentQuestion.code}}/>
             <Divider/>
             <div className="mx-3 my-3">
             {!isViewSolution ?              
@@ -410,8 +432,8 @@ function Solution() {
               <div className="row">
               {questions.map((question,index)=>{
                       return <div key={question.id} className="col-3 col-md-3 mx-1 my-1">
-                        <Button id={question.id} variant='contained' style={{backgroundColor:responseData.get(question.id)!==undefined?red.A200:green[800]}}   onClick={()=>chnageCurrentQuestion(question,index)}>{index+1}</Button>
-                      </div>
+                      <button id={question.id}  className={activeButton===index?'btn  btn-current':'btn btn-outline-secondary'}  onClick={()=>changeCurrentQuestion(question,index)}  style={{height:30+'px',width:45+'px'}}>{index+1}</button>
+                        </div>
                     })}                
               </div>
             </div>
@@ -419,20 +441,6 @@ function Solution() {
         </div>
       </div>
     </div>
-    {/* <div id="test-navigate-button" className="container">
-        <div  className="row">
-          <div className="col-md-9">
-            <Card>
-            <Divider />
-              <div  className="d-flex my-2" >
-                <Button variant="contained" color="primary" onClick={changePreviousQuestion} className="mx-1">Previous</Button>
-                
-                <Button variant="contained" color="success" onClick={changeNextAndSaveQuestion} className="ms-auto mx-1">Save & Next</Button>
-              </div>
-            </Card>
-          </div>
-        </div>
-    </div> */}
     </>
   )
 }

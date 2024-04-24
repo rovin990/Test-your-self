@@ -88,12 +88,16 @@ function ShowQuestions() {
           </div>
           {questions.map((question,index)=>{
           return( <Card key={question.id} className='my-3' style={{backgroundColor:'#f0f8ff'}}>
-                <CardHeader title={question.title}/> 
+            
+              <CardHeader title={question.title}  /> 
+
               {question.questionImage && 
                 <div className='container text-center'>
                   <img src={`data:image/png;base64,`+question.questionImage.data}  alt='Question '/>
                 </div> }
-              <CardContent>              
+              
+              <CardContent>  
+              <div className='container text-start' dangerouslySetInnerHTML={{__html:question.code}}/>            
                   <ol>
                     {question.options.option1 &&<li>{question.options.option1}</li>}
                     {question.options.option2 &&<li>{question.options.option2}</li>}

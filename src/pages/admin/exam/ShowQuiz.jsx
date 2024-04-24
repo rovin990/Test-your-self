@@ -22,7 +22,7 @@ function ShowQuiz() {
    function loadQuizzes(){
         quizServiceObj.getQuizz("All").then(response=>{
             console.log(response)
-            if(response.status==200){
+            if(response.status===200){
                 setQuizzes(response.data)
             }
         }).catch(error=>{

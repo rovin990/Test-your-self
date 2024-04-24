@@ -7,8 +7,8 @@ class UserQuizService{
     async getAllAttemptedQuizResponse(){
         return axios.get(ENVConstant.BASE_URL+'/test-response',{withCredentials:true})
     }
-    async getQuizResponseByQuizId(quizId){
-        return axios.get(ENVConstant.BASE_URL+'/test-response/'+quizId,{withCredentials:true})
+    async getQuizResponseByQuizIdAndAttempNo(quizId,attemptNo){
+        return axios.get(ENVConstant.BASE_URL+'/test-response/'+quizId+"/"+attemptNo,{withCredentials:true})
     }
 }
 
