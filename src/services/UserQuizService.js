@@ -1,14 +1,12 @@
-import axios from "axios";
-
-import { ENVConstant } from "../constants/ENVConstant";
+import {axiosInstance} from "../interceptor"
 
 class UserQuizService{
 
     async getAllAttemptedQuizResponse(){
-        return axios.get(ENVConstant.BASE_URL+'/test-response',{withCredentials:true})
+        return axiosInstance.get('/test-response',{withCredentials:true})
     }
     async getQuizResponseByQuizIdAndAttempNo(quizId,attemptNo){
-        return axios.get(ENVConstant.BASE_URL+'/test-response/'+quizId+"/"+attemptNo,{withCredentials:true})
+        return axiosInstance.get('/test-response/'+quizId+"/"+attemptNo,{withCredentials:true})
     }
 }
 

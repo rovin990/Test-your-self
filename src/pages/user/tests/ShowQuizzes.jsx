@@ -51,7 +51,7 @@ function ShowQuizzes() {
                     <CardHeader avatar={<Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
                     <img src={ process.env.PUBLIC_URL +'/images/category/quiz.png'} alt='quiz.png' style={quizCss}/></Avatar> }
                         title={quiz.title}
-                        subheader="September 14, 2016"
+                        subheader={quiz.createdDate}
                     />
                     <CardContent>
                         <ReadMore text={quiz.description} displayCount='30'/>

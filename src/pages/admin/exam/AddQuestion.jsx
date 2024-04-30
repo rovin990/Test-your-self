@@ -46,7 +46,7 @@ function AddQuestion() {
   const [code,setCode] =useState('')
 
   const [examTagsChip, setExamTagsChip]=useState([]);
-  // const [quizChip, setQuizChip]=useState([]);
+  
   const [question,setQuestion]=useState({
     title:"",
     "code":"",
@@ -79,7 +79,6 @@ const [subjectErr ,setSubjectErr]= useState(false)
 const [answerErr,setAnswerErr]=useState(false)
 
 const [hasCode,setHasCode]=useState(false);
-
 const [checked, setChecked] = useState(false);
 
 const [open,setOpen] = useState(false);
@@ -198,6 +197,8 @@ const handleSubmit=()=>{
   const formData = new FormData();
   if(hasCode){
     question.code=code;
+  }else{
+    question.code=null;
   }
 
   console.log(question)
@@ -275,6 +276,7 @@ const [op2File,setOp2File]=useState(null);
 const [op3File,setOp3File]=useState(null);
 const [op4File,setOp4File]=useState(null);
 const [titleImg,setTitleImg]=useState(null);
+
 function handleFileInput(event){
   const value=event.target.files[0];
   const name=event.target.name;
@@ -297,6 +299,7 @@ function handleFileInput(event){
     default : break;
   }
 }
+
 const [questionFile,setQuestionFile]=useState(null);
 function captureFile(event){
   const value=event.target.files[0];
@@ -345,7 +348,7 @@ function handleFileUpload(){
                             modules={modules}
                             bounds={'.app'}
                             placeholder='Start typing....'
-                          />
+                          /> 
                        }
 
                         <TextField error={op1Err} type='file' fullWidth id="image" size="small"   margin="dense" onChange={handleFileInput} name='image'  />
@@ -382,7 +385,7 @@ function handleFileUpload(){
                         </FormControl>
                         
                         <Paper  sx={chipBoxCss} component="ul">
-                          {examTagsChip.map((data) => {
+                          {examTagsChip && examTagsChip.map((data) => {
                             let icon;
 
                             if (data.label === 'React') {
@@ -406,7 +409,7 @@ function handleFileUpload(){
                             <InputLabel id="quiz">quiz</InputLabel>
                             <Select labelId="quiz" id="quiz" value={quizName} label="quiz" onChange={handleUserInput} name="quiz" >
                                 <MenuItem value="none"><em>None</em></MenuItem> 
-                                {quizzes.map(quiz=>{
+                                {quizzes && quizzes.map(quiz=>{
                                   if(quiz.questionLeft>0)
                                   return <MenuItem key={quiz.qid} value={quiz.qid} >{quiz.title}</MenuItem>
                                   })}

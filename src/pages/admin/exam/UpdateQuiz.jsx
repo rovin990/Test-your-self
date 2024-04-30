@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Form, useLoaderData, useLocation } from 'react-router-dom';
 
 import { Button, Card, CardActions, CardContent, CardHeader, FormControl, FormControlLabel,  InputLabel, MenuItem, Select, Switch, TextField } from '@mui/material'
@@ -8,7 +8,6 @@ import QuizService from "../../../services/QuizService"
 import Model from '../../../utility/Model';
 
 const quizService = new QuizService();
-
 
 function UpdateQuiz() {
     const location = useLocation();
@@ -27,9 +26,11 @@ function UpdateQuiz() {
     const [categories]= useState(cData);
 
 
+
     const [open,setOpen] = useState(false);
     const [responseMsg,setResponseMsg]=useState("");
     const [color,setColor] = useState("");
+
 
   function  handleUserInput(event){
         const name= event.target.name;
@@ -122,7 +123,7 @@ function UpdateQuiz() {
                                 <MenuItem value="">
                                 <em>None</em>
                                 </MenuItem>
-                                {categories.map(category=>{
+                                {categories && categories.map(category=>{
                                     return <MenuItem  value={category.title}>{category.title}</MenuItem>
                                 })}
                             </Select>

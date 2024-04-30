@@ -1,12 +1,10 @@
-import axios from "axios";
-
-import { ENVConstant } from "../constants/ENVConstant";
+import { axiosInstance } from '../interceptor';
 
 class CategoryService{
 
     async  getCategories(){
 
-        return await axios.get(ENVConstant.BASE_URL+"/category/all",{withCredentials:true});
+        return await axiosInstance.get("/category/all",{withCredentials:true});
     }
 
     async saveCategory(category){
@@ -15,11 +13,11 @@ class CategoryService{
         // for (var key of category.entries()) {
         //         console.log(key[0] + ', ' + key[1]);
         //     }
-        return axios.post(ENVConstant.BASE_URL+"/category",category,{withCredentials:true})
+        return axiosInstance.post("/category",category,{withCredentials:true})
     }
 
     async saveFile(formData){
-        return await axios.post(ENVConstant.BASE_URL+"/image/category",formData,{withCredentials:true,headers:{"Content-Type":"multipart/form-data"}})
+        return await axiosInstance.post("/image/category",formData,{withCredentials:true,headers:{"Content-Type":"multipart/form-data"}})
     }
 }
 

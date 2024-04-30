@@ -53,7 +53,7 @@ function ShowQuiz() {
         <div className='container'>
             <CardHeader title="All Quizzes" />
         </div>
-        {quizzes.map(quiz=>{
+        {quizzes && quizzes.map(quiz=>{
         return( <Card key={quiz.qid} className='container my-3' style={{backgroundColor:'#f0f8ff'}}>
             <CardHeader title={quiz.title} subheader={quiz.description}/>
             <CardContent>

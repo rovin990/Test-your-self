@@ -20,7 +20,7 @@ function Profile() {
     },[])
   return (
     <div className='container text-center'>
-        <img src={ process.env.PUBLIC_URL +'/images/kick1.jpg'} alt='logo.png' style={logoCss}/>
+        <img src={ process.env.PUBLIC_URL +'/images/logo.png'} alt='logo.png' style={logoCss}/>
         <h2>{user.username}</h2>
         <div className='container text-center'>
             <div className='row'>

@@ -76,6 +76,7 @@ function SignIn() {
             
         })
         .catch(reject=>{
+            console.log(reject)
             const tempRes=reject.response;
             const tempData=tempRes.data;
             Swal.fire({

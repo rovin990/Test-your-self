@@ -1,36 +1,34 @@
-import axios from "axios";
-
-import { ENVConstant } from "../constants/ENVConstant";
+import {axiosInstance} from "../interceptor"
 
 class QuestionService{
     async getQuestions(filter){        
-        return await axios.get(ENVConstant.BASE_URL+"/question/"+filter,{withCredentials:true });
+        return await axiosInstance.get("/question/"+filter,{withCredentials:true });
     }
 
     async createQuestion(formData){
-        return await axios.post(ENVConstant.BASE_URL+"/question",formData,{withCredentials:true })
+        return await axiosInstance.post("/question",formData,{withCredentials:true })
     }
     async createQuestionWithOutImages(formData){
-        return await axios.post(ENVConstant.BASE_URL+"/question/withoutimage",formData,{withCredentials:true })
+        return await axiosInstance.post("/question/withoutimage",formData,{withCredentials:true })
     }
 
     async updateQuestion(question){
-        return await axios.put(ENVConstant.BASE_URL+"/question",question,{withCredentials:true});
+        return await axiosInstance.put("/question",question,{withCredentials:true});
     }
 
     async deleteQuestion(questionId){
-        return await axios.delete(ENVConstant.BASE_URL+"/question/"+questionId,{withCredentials:true })
+        return await axiosInstance.delete("/question/"+questionId,{withCredentials:true })
     }
 
     async getQuestionsByQuizId(quizId){
-        return await axios.get(ENVConstant.BASE_URL+"/question/quiz/"+quizId,{withCredentials:true })
+        return await axiosInstance.get("/question/quiz/"+quizId,{withCredentials:true })
     }
     async getQuestionsByQuizIdWithAnswer(quizId){
-        return await axios.get(ENVConstant.BASE_URL+"/question/quiz/"+quizId,{withCredentials:true})
+        return await axiosInstance.get("/question/quiz/"+quizId,{withCredentials:true})
     }
 
     async uploadQuestionFile(formData){
-        return await axios.post(ENVConstant.BASE_URL+"/question/import",formData,{withCredentials:true})
+        return await axiosInstance.post("/question/import",formData,{withCredentials:true})
     }
     
 }

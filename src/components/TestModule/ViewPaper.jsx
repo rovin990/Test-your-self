@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom';
 
-import {Button, Card, CardContent, CardHeader, Divider, FormControlLabel} from "@mui/material"
+import {Button, Card, CardContent, CardHeader, Divider} from "@mui/material"
+import Swal from "sweetalert2"
 
 import QuestionService from "../../services/QuestionService"
 import GlobalService from "../../services/GlobalService";
@@ -16,14 +17,29 @@ function ViewPaper() {
     console.log(quiz)
     const [allQuestion,setAllQuestion] = useState([])
     const loggedInUser=JSON.parse(_globalService.getUserDetails()); // loggedInUser details
+    const [isLoaded,setIsLoaded]=useState(false);
 
     useEffect(()=>{
         _questionService.getQuestionsByQuizId(quiz.qid).then(response=>{
             setAllQuestion(response.data)
+            setIsLoaded(true)
         }).catch(error=>{
             console.log(error)
         })
     },[])
+    let sweetAlert
+    if(!isLoaded){
+        Swal.fire(
+                {
+                title:'Loading...',
+                icon:"info", 
+                showConfirmButton:false                
+              }
+            )
+            return;
+    }else{
+        Swal.close();
+    }
 
   return (
     <>
@@ -41,7 +57,7 @@ function ViewPaper() {
                 </Card>
                 </div>
             </div>
-            {allQuestion.map((question,index)=>{
+            {allQuestion && allQuestion.map((question,index)=>{
                 return <div key={question.qid} className='row'>
                     <div className='col-md-8 offset-md-2'>
                     <Card className='my-2'>
@@ -65,6 +81,7 @@ function ViewPaper() {
                             {question.title.split("#")[3] && <li>{question.title.split("#")[3]}</li> }
                             </ol>
                         </div> }
+                        {question.code && <div className='container text-start' dangerouslySetInnerHTML={{__html:question.code}}/>}
                         <Divider/>
                         <div className='d-flex flex-column justify-content-evenly'>
                         <ol>

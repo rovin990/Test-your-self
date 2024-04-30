@@ -290,7 +290,7 @@ function ExamPaper() {
         
         <div className="col-md-3 bg-columbia-blue" >
             <section className="container text-end">
-               <Timer examTimeInMins='10' width='auto' actionOnTimeEnd={actionOnTimeEnd}/>
+               <Timer examTimeInMins={quiz.noOfQuestion*2} width='auto' actionOnTimeEnd={actionOnTimeEnd}/>
             </section>
             <Divider />
 
