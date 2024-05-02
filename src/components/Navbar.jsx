@@ -13,6 +13,7 @@ const logoCss={
 }
 export default function Navbar() {
   const[isLoggedIn,setIsLoggedIn] = useState(false);
+  const user=JSON.parse(sessionStorage.getItem("userdetails"));
 
   useEffect(()=>{
     let auth = sessionStorage.getItem("auth");
@@ -36,7 +37,7 @@ export default function Navbar() {
          { !isLoggedIn && <Link href="/signup" underline="none" color="inherit">SignUp</Link> }
          { !isLoggedIn && <Link href="/signin" underline="none" color="inherit" className='mx-2'>SignIn</Link> }
          { isLoggedIn && <Link href="/logout" underline="none" color="inherit">Logout</Link> }
-         { isLoggedIn && <Link href="profile" underline="none" color="inherit" className='mx-2'>profile</Link> }
+         { isLoggedIn && <Link href={user.role.includes("ADMIN")?"/admin/profile":"/user/profile"} underline="none" color="inherit" className='mx-2'>profile</Link> }
         </Toolbar>
       </AppBar>
   );

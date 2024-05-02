@@ -63,18 +63,18 @@ function ShowQuiz() {
                 <div className='container'>
                     <div className='row'>
                         <div className='col-md-2 col-xs-auto my-sm-2'>
-                            <Link to={"show-questions"}>
-                                <Button variant="contained" color='success'  className='mx-1'>Questions</Button>
+                            <Link to={"/admin/show-questions/"+quiz.qid} state={quiz}>
+                                <Button variant="contained" color='success'  className='mx-1' endIcon={quiz.noOfQuestion}>Questions</Button>
                             </Link>
                         </div>
                         <div className='col-md-2 col-xs-auto my-sm-2'>
                             <Button  color='secondary'  className='mx-1 ' >Maxs_Marks : {quiz.maxMark}</Button>
                          </div>
                         <div className='col-md-2 col-xs-auto my-sm-2'>
-                            <Button  color='secondary' className='mx-1'   >Questions : {quiz.noOfQuestion}</Button>
+                            <Button  color='secondary' className='mx-1' >Attempts</Button>               
                         </div>
                         <div className='col-md-2 col-xs-auto my-sm-2'>
-                            <Button  color='secondary' className='mx-1' >Attempts</Button>               
+                            <Button  color='secondary' className='mx-1' >Questions Left : {quiz.questionLeft}</Button>               
                         </div>
                         <div className='col-md-2 col-xs-auto my-sm-2'>
                             <Link to={"/admin/update-quiz"} state={quiz}>

@@ -44,7 +44,7 @@ function AdminDashboard() {
                         <CardContent>
                             <nav aria-label="main mailbox folders">
                                 <List>
-                                    <ListItemLink to="/home" primary="Home" icon={<HomeIcon />} />
+                                    {/* <ListItemLink to="/home" primary="Home" icon={<HomeIcon />} /> */}
                                     <ListItemLink to="/profile" primary="Profile" icon={<AccountCircleIcon />} />
                                     <ListItemLink to="/categories" primary="Categories" icon={<ListIcon />} />
                                     <ListItemLink to="/add-category" primary="Add Category" icon={<PlaylistAddIcon />} />                                

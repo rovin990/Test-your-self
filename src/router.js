@@ -73,10 +73,10 @@ const router = createBrowserRouter([
       element:<GaurdRoute Component={AdminDashboard}/>,
       children:[
         // {index:true,element:<AdminWelcome />},   
-        // {
-        //   path:"home",
-        //   element:<h1>home</h1>
-        // },
+        {
+          path:"show-questions/:quizId",
+          element:<GaurdRoute Component={ViewPaper} />
+        },
         {
             path:"show-quizzes",
             element:<GaurdRoute  Component={ShowQuiz} />          
@@ -147,7 +147,11 @@ const router = createBrowserRouter([
                 const userAttemptedQuiz = await userQuizService.getAllAttemptedQuizResponse();
                 return userAttemptedQuiz.data;
               }
-            }
+            },
+            {
+              path:"profile",
+              element:<GaurdRoute  Component={AdminProfile} />
+            },
             
         ]
     },
@@ -180,6 +184,7 @@ const router = createBrowserRouter([
         return  [questions.data,quiz.data];
       }
     },
+    
    
 
   ]);
